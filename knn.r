@@ -1,0 +1,7 @@
+library(caret)
+path <- getwd()
+csv_readed = read.csv(file=paste(path,"/parsed.csv",sep = ""))
+head(csv_readed)
+train_control <- trainControl(method="cv", number=10)
+str(csv_readed)
+model <- train(data=csv_readed,income~.,  method = "knn", trControl = train_control, metric = "Accuracy")
