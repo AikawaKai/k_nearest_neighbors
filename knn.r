@@ -8,15 +8,12 @@ crossValidationByCaret <- function(data_set, class, fold)  {
   model <- train(data=data_set,income~.,  method = "knn", trControl = train_control)
   return(model)
 }
-
-crossValidationByCaret(csv_readed, income, 20)
-
+#crossValidationByCaret(csv_readed, income, 20)
 classifyKnn <- function(model, input, k) {
   for(row in model[1:14]){
     print(row)
   }
 }
-
 myHoldOut<-function(csv_readed, perc, seed){
   ## 75% of the sample size
   smp_size <- floor(perc * nrow(csv_readed))
@@ -27,7 +24,6 @@ myHoldOut<-function(csv_readed, perc, seed){
   test = csv_readed[-train_ind,]
   return(list(training, test))
 }
-
 calculateDistance <- function(x1, x2){
   d = 0
   for(i in c(1:(length(x1)-1) ))
@@ -37,7 +33,6 @@ calculateDistance <- function(x1, x2){
   d = sqrt(d)
   return(d)
 }
-
 checkTpFpTnFn<-function(res, expected){
   if(res==1){
     if(res==expected){
@@ -53,7 +48,6 @@ checkTpFpTnFn<-function(res, expected){
     }
   }
 }
-
 getAccuracyFromCM<-function(confMatrix){
   true <- confMatrix[1]+confMatrix[3]
   total <- confMatrix[1]+confMatrix[2]+confMatrix[3]+confMatrix[4]
@@ -93,21 +87,21 @@ myKnn <- function(training, test, k){
   }  
   return(myconfusionMatrix)
 }
-
-csv_readed = read.csv(file=paste(path,"/parsed.csv",sep = ""))
-#csv_readed$income = factor(csv_readed$income)
-res <- myHoldOut(csv_readed, 0.75, 123)
+getTrainingTestHoldOutFromCsv <- function(file_, perc_train){
+  csv_readed = read.csv(file=file_)
+  #csv_readed$income = factor(csv_readed$income)
+  return(myHoldOut(csv_readed, perc_train, 123))
+}
+myKnnWithCpp <- function(training, test){
+  sourceCpp(paste(path,"/search.cpp", sep=""))
+  train = as.matrix(training)
+  test = as.matrix(test)
+  myRes <- searchCpp(train, test)
+  return(myRes)
+}
+file <- paste(path,"/parsed.csv",sep="")
+file
+res <- getTrainingTestHoldOutFromCsv(file,0.75)
 training <- res[[1]]
 test <- res[[2]]
-confMatrix <- myKnn(training, test,9)
-accuracy <- getAccuracyFromCM(confMatrix)
-accuracy
-
-sourceCpp(paste(path,"/search.cpp", sep=""))
-typeof(training)
-train = as.matrix(training)
-test = as.matrix(test)
-summary(train)
-summary(test)
-convolveCpp(train, test)
-     
+confusionMatrix <- myKnnWithCpp(training, test)
