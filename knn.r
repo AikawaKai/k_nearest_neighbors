@@ -1,15 +1,15 @@
 library(caret)
-path <- getwd()
-csv_readed = read.csv(file=paste(path,"/parsed.csv",sep = ""))
-csv_readed$income = factor(csv_readed$income)
+# View(class::knn)
+library(Rcpp)
+path <- "/home/kai/Documents/Unimi/MetodiStatisticiApp/k_nearest_neighbors"
 
-crossValidationByCaret <- function(x)  {
-  train_control <- trainControl(method="cv", number=x)
-  model <- train(data=csv_readed,income~.,  method = "knn", trControl = train_control)
+crossValidationByCaret <- function(data_set, class, fold)  {
+  train_control <- trainControl(method="cv", number=fold)
+  model <- train(data=data_set,income~.,  method = "knn", trControl = train_control)
   return(model)
 }
 
-crossValidationByCaret(20)
+crossValidationByCaret(csv_readed, income, 20)
 
 classifyKnn <- function(model, input, k) {
   for(row in model[1:14]){
@@ -61,8 +61,8 @@ getAccuracyFromCM<-function(confMatrix){
 }
 myKnn <- function(training, test, k){
   myconfusionMatrix <- c(0, 0, 0, 0)
-  training = training[1:2000,]
-  test = test[1:1000,]
+  training = training[1:4000,]
+  test = test[1:2000,]
   list_ = list()
   for (i in 1:nrow(test)){
     distances <- c()
@@ -94,9 +94,20 @@ myKnn <- function(training, test, k){
   return(myconfusionMatrix)
 }
 
+csv_readed = read.csv(file=paste(path,"/parsed.csv",sep = ""))
+#csv_readed$income = factor(csv_readed$income)
 res <- myHoldOut(csv_readed, 0.75, 123)
 training <- res[[1]]
 test <- res[[2]]
 confMatrix <- myKnn(training, test,9)
 accuracy <- getAccuracyFromCM(confMatrix)
 accuracy
+
+sourceCpp(paste(path,"/search.cpp", sep=""))
+typeof(training)
+train = as.matrix(training)
+test = as.matrix(test)
+summary(train)
+summary(test)
+convolveCpp(train, test)
+     
