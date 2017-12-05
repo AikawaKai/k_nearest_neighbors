@@ -20,12 +20,8 @@ int classify(NumericMatrix training, std::multimap<double,int> res){
   {
     double new_dist = it->first;
     int index = it->second;
-    NumericVector train_j = training.row(j);
+    NumericVector train_j = training.row(index);
     int class_train = train_j.operator()(14);
-    if(class_train==2){
-      std::cout<<class_train;
-      std::cout<<" ";
-    }
     nearestClasses(j) = class_train;
     if(class_train==1){
       count_1=count_1+1;
@@ -61,7 +57,7 @@ NumericMatrix searchCpp(NumericMatrix training, NumericMatrix test) {
       orderingMap.insert(std::pair<double,int>(dist,j));
     }
     int class_ = classify(training, orderingMap);
-    /*std::cout<<class_;
-    std::cout<<"\n";*/
+    std::cout<<class_;
+    std::cout<<"\n";
   }
 }
