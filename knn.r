@@ -104,7 +104,7 @@ myKnnWithCpp <- function(training, test, k){
 }
 
 getTrainingTestCrossValidation <- function(data, k_){
-  folds <- createFolds(data$income, k = k_)
+  folds <- createFolds(factor(data$income), k = k_)
   trainings <- list(k_)
   tests <- list(k_)
   for(i in 1:k_){
