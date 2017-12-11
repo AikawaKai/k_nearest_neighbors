@@ -94,6 +94,19 @@ getAccuracyFromCM<-function(confMatrix){
   return(true/total)
 }
 
+getPrecisionFromCM<-function(confMatrix, class_){
+  if(class_==1){
+    index1 = 1
+    index2 = 2
+  }else{
+    index1 = 3
+    index2 = 4
+  }
+  Tp <- confMatrix[index1]
+  Fp <- confMatrix[index2]
+  return(Tp/(Tp+Fp))
+}
+
 # faster implementation with CPP
 myKnnWithCpp <- function(training, test, k){
   sourceCpp(paste(path,"/search.cpp", sep=""))
@@ -121,7 +134,7 @@ file <- paste(path,"/parsed.csv",sep="")
 res <- getTrainingTestHoldOutFromCsv(file, 0.75)
 training <- res[[1]]
 test <- res[[2]]
-confusionMatrix <- myKnnWithCpp(training, test)
+confusionMatrix <- myKnnWithCpp(training, test, 9)
 getAccuracyFromCM(confusionMatrix)
 csv_readed <- read.csv(file=file)
 #csv_readed$income <- factor(csv_readed$income)
@@ -131,7 +144,11 @@ tests <- ret[[2]]
 for(i in 1:5){
   training <- trainings[[i]]
   test <- tests[[i]]
-  confusionMatrix <- myKnnWithCpp(training, test, 9)
+  confusionMatrix <- myKnnWithCpp(training, test, 5)
   acc <- getAccuracyFromCM(confusionMatrix)
+  prec1 <- getPrecisionFromCM(confusionMatrix, 1)
+  prec2 <- getPrecisionFromCM(confusionMatrix, 2)
   print(acc)
+  print(prec1)
+  print(prec2)
 }
