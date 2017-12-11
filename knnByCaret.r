@@ -16,3 +16,4 @@ file_ <- paste(path,"/parsed.csv",sep="")
 csv_readed <- read.csv(file=file_)
 csv_readed$income <- factor(csv_readed$income)
 model <- crossValidationByCaret(csv_readed, income, 20)
+model

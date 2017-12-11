@@ -86,6 +86,7 @@ myKnn <- function(training, test, k){
   return(myconfusionMatrix)
 }
 
+
 # get accuracy from confusion matrix
 getAccuracyFromCM<-function(confMatrix){
   true <- confMatrix[1]+confMatrix[3]
@@ -94,14 +95,27 @@ getAccuracyFromCM<-function(confMatrix){
 }
 
 # faster implementation with CPP
-myKnnWithCpp <- function(training, test){
+myKnnWithCpp <- function(training, test, k){
   sourceCpp(paste(path,"/search.cpp", sep=""))
   train = as.matrix(training)
   test = as.matrix(test)
-  myRes <- searchCpp(train, test)
+  myRes <- searchCpp(train, test, k)
   return(myRes)
 }
 
+getTrainingTestCrossValidation <- function(data, k_){
+  folds <- createFolds(data$income, k = k_)
+  trainings <- list(k_)
+  tests <- list(k_)
+  for(i in 1:k_){
+    index_test <- unname(unlist(folds[i]))
+    test <-data[index_test,]
+    training <- data[-index_test,]
+    tests[[i]] <- test
+    trainings[[i]] <- training
+  }
+  return(list(trainings, tests))
+}
 # main
 file <- paste(path,"/parsed.csv",sep="")
 res <- getTrainingTestHoldOutFromCsv(file, 0.75)
@@ -109,3 +123,15 @@ training <- res[[1]]
 test <- res[[2]]
 confusionMatrix <- myKnnWithCpp(training, test)
 getAccuracyFromCM(confusionMatrix)
+csv_readed <- read.csv(file=file)
+#csv_readed$income <- factor(csv_readed$income)
+ret <- getTrainingTestCrossValidation(csv_readed, 5)
+trainings <- ret[[1]]
+tests <- ret[[2]]
+for(i in 1:5){
+  training <- trainings[[i]]
+  test <- tests[[i]]
+  confusionMatrix <- myKnnWithCpp(training, test, 9)
+  acc <- getAccuracyFromCM(confusionMatrix)
+  print(acc)
+}

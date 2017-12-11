@@ -11,12 +11,12 @@ double distance(NumericVector x1, NumericVector x2){
   
 }
 
-int classify(NumericMatrix training, std::multimap<double,int> res){
+int classify(NumericMatrix training, std::multimap<double,int> res, int k){
   std::map<double,int>::iterator it = res.begin();
   int count_1 = 0;
   int count_2 = 0;
-  NumericVector nearestClasses = NumericVector(7);
-  for(int j=0;j<7;j++)
+  NumericVector nearestClasses = NumericVector(k);
+  for(int j=0;j<k;j++)
   {
     double new_dist = it->first;
     int index = it->second;
@@ -77,7 +77,7 @@ int checkRealClass(int class_, int expected){
 }
 
 // [[Rcpp::export]]
-NumericVector searchCpp(NumericMatrix training, NumericMatrix test) {
+NumericVector searchCpp(NumericMatrix training, NumericMatrix test, int k) {
   //int na = a.size(), nb = b.size();
   NumericVector confusionMatrix = NumericVector(4);
   confusionMatrix.operator()(0) = 0;
@@ -101,7 +101,7 @@ NumericVector searchCpp(NumericMatrix training, NumericMatrix test) {
       double dist = distance(test_i, train_j);
       orderingMap.insert(std::pair<double,int>(dist,j));
     }
-    int class_ = classify(training, orderingMap);
+    int class_ = classify(training, orderingMap, k);
     int check = checkRealClass(class_, test_i.operator()(14));
     confusionMatrix.operator()(check) = confusionMatrix.operator()(check)+1;
   }
