@@ -36,9 +36,54 @@ int classify(NumericMatrix training, std::multimap<double,int> res){
   }
 }
 
+std::string checkTranslator(int check){
+  switch(check){
+    case 0:
+      return "TP";
+      break;
+    case 1:
+      return "FP";
+      break;
+    case 2:
+      return "TN";
+      break;
+    case 3:
+      return "FN";
+      break;
+    default:
+      return "ERROR";
+  }
+}
+
+int checkRealClass(int class_, int expected){
+  switch(class_){
+    case 1:
+      if (class_ == expected){
+        return 0; //TP
+      }else{
+        return 1; //FP
+      }
+      break;
+    case 2:
+      if (class_ == expected){
+        return 2; //TN
+      }else{
+        return 3; //FN
+      }
+      break;
+    default:
+      return -1;
+  }
+}
+
 // [[Rcpp::export]]
-NumericMatrix searchCpp(NumericMatrix training, NumericMatrix test) {
+NumericVector searchCpp(NumericMatrix training, NumericMatrix test) {
   //int na = a.size(), nb = b.size();
+  NumericVector confusionMatrix = NumericVector(4);
+  confusionMatrix.operator()(0) = 0;
+  confusionMatrix.operator()(1) = 0;
+  confusionMatrix.operator()(2) = 0;
+  confusionMatrix.operator()(3) = 0;
   int numRowTr = training.rows();
   int numColTr = training.cols();
   int numRowTe = test.rows();
@@ -57,7 +102,8 @@ NumericMatrix searchCpp(NumericMatrix training, NumericMatrix test) {
       orderingMap.insert(std::pair<double,int>(dist,j));
     }
     int class_ = classify(training, orderingMap);
-    std::cout<<class_;
-    std::cout<<"\n";
+    int check = checkRealClass(class_, test_i.operator()(14));
+    confusionMatrix.operator()(check) = confusionMatrix.operator()(check)+1;
   }
+  return confusionMatrix;
 }

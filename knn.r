@@ -3,17 +3,7 @@ library(caret)
 library(Rcpp)
 path <- "/home/kai/Documents/Unimi/MetodiStatisticiApp/k_nearest_neighbors"
 
-crossValidationByCaret <- function(data_set, class, fold)  {
-  train_control <- trainControl(method="cv", number=fold)
-  model <- train(data=data_set,income~.,  method = "knn", trControl = train_control)
-  return(model)
-}
-#crossValidationByCaret(csv_readed, income, 20)
-classifyKnn <- function(model, input, k) {
-  for(row in model[1:14]){
-    print(row)
-  }
-}
+# hold out from table with split=perc
 myHoldOut<-function(csv_readed, perc, seed){
   ## 75% of the sample size
   smp_size <- floor(perc * nrow(csv_readed))
@@ -24,6 +14,15 @@ myHoldOut<-function(csv_readed, perc, seed){
   test = csv_readed[-train_ind,]
   return(list(training, test))
 }
+
+# extract from csv training and test with split=perc_train
+getTrainingTestHoldOutFromCsv <- function(file_, perc_train){
+  csv_readed = read.csv(file=file_)
+  #csv_readed$income = factor(csv_readed$income)
+  return(myHoldOut(csv_readed, perc_train, 123))
+}
+
+# euclidean distance
 calculateDistance <- function(x1, x2){
   d = 0
   for(i in c(1:(length(x1)-1) ))
@@ -33,6 +32,8 @@ calculateDistance <- function(x1, x2){
   d = sqrt(d)
   return(d)
 }
+
+# check if TP, FP, TN Or FN
 checkTpFpTnFn<-function(res, expected){
   if(res==1){
     if(res==expected){
@@ -48,11 +49,8 @@ checkTpFpTnFn<-function(res, expected){
     }
   }
 }
-getAccuracyFromCM<-function(confMatrix){
-  true <- confMatrix[1]+confMatrix[3]
-  total <- confMatrix[1]+confMatrix[2]+confMatrix[3]+confMatrix[4]
-  return(true/total)
-}
+
+# slow implementation
 myKnn <- function(training, test, k){
   myconfusionMatrix <- c(0, 0, 0, 0)
   training = training[1:4000,]
@@ -87,11 +85,15 @@ myKnn <- function(training, test, k){
   }  
   return(myconfusionMatrix)
 }
-getTrainingTestHoldOutFromCsv <- function(file_, perc_train){
-  csv_readed = read.csv(file=file_)
-  #csv_readed$income = factor(csv_readed$income)
-  return(myHoldOut(csv_readed, perc_train, 123))
+
+# get accuracy from confusion matrix
+getAccuracyFromCM<-function(confMatrix){
+  true <- confMatrix[1]+confMatrix[3]
+  total <- confMatrix[1]+confMatrix[2]+confMatrix[3]+confMatrix[4]
+  return(true/total)
 }
+
+# faster implementation with CPP
 myKnnWithCpp <- function(training, test){
   sourceCpp(paste(path,"/search.cpp", sep=""))
   train = as.matrix(training)
@@ -99,9 +101,11 @@ myKnnWithCpp <- function(training, test){
   myRes <- searchCpp(train, test)
   return(myRes)
 }
+
+# main
 file <- paste(path,"/parsed.csv",sep="")
-file
-res <- getTrainingTestHoldOutFromCsv(file,0.75)
+res <- getTrainingTestHoldOutFromCsv(file, 0.75)
 training <- res[[1]]
 test <- res[[2]]
 confusionMatrix <- myKnnWithCpp(training, test)
+getAccuracyFromCM(confusionMatrix)
