@@ -1,7 +1,7 @@
 library(caret)
 path <- "/home/kai/Documents/Unimi/MetodiStatisticiApp/k_nearest_neighbors"
 crossValidationByCaret <- function(data_set, class, fold)  {
-  train_control <- trainControl(method="cv", number=fold)
+  train_control <- trainControl(method="cv", number=fold, returnResamp = "all")
   model <- train(data=data_set,income~.,  method = "knn", trControl = train_control)
   return(model)
 }
