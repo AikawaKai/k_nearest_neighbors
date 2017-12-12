@@ -138,8 +138,17 @@ externalCrossValidationWithInnerOptimization<-function(trainings, tests, myK, k_
       ret <- getTrainingTestCrossValidation(training, k_fold)
       trains <- ret[[1]]
       tests <- ret[[2]]
-      print("###### Started Inner Cross Validation ######\n")
+      cat("###### Started Inner Cross Validation ######\n")
       for(j in 1:k_fold){
+        cat("External Fold: ")
+        cat(i)
+        cat("\n")
+        cat("Inner Fold: ")
+        cat(j)
+        cat("\n")
+        cat("Parameter: ")
+        cat(k)
+        cat("\n")
         confusionMatrix <- myKnnWithCpp(trains[[j]], tests[[j]], k)
         acc <- getAccuracyFromCM(confusionMatrix)
         prec1 <- getPrecisionFromCM(confusionMatrix, 1)
@@ -153,11 +162,11 @@ externalCrossValidationWithInnerOptimization<-function(trainings, tests, myK, k_
 }
 # main
 file <- paste(path,"/parsed.csv",sep="")
-res <- getTrainingTestHoldOutFromCsv(file, 0.75)
-training <- res[[1]]
-test <- res[[2]]
-confusionMatrix <- myKnnWithCpp(training, test, 9)
-getAccuracyFromCM(confusionMatrix)
+#res <- getTrainingTestHoldOutFromCsv(file, 0.75)
+#training <- res[[1]]
+#test <- res[[2]]
+#confusionMatrix <- myKnnWithCpp(training, test, 9)
+#getAccuracyFromCM(confusionMatrix)
 csv_readed <- read.csv(file=file)
 #csv_readed$income <- factor(csv_readed$income)
 ret <- getTrainingTestCrossValidation(csv_readed, 5)

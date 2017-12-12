@@ -1,0 +1,1000 @@
++     count_2 <- 0
++     for (m in 1:k){
++       if(as.integer(k_classes[[m]])==1){
++         count_1 <- count_1 + 1
++       }else{
++         count_2 <- count_2 + 1
++       }
++     }
++     if(count_1>count_2){
++       res <- checkTpFpTnFn(as.integer(test[i,15]),1)
++     }else{
++       res <- checkTpFpTnFn(as.integer(test[i,15]),2)
++     }
++     myconfusionMatrix[res] = myconfusionMatrix[res]+1
++   }  
++   return(myconfusionMatrix)
++ }
+> # get accuracy from confusion matrix
+> getAccuracyFromCM<-function(confMatrix){
++   true <- confMatrix[1]+confMatrix[3]
++   total <- confMatrix[1]+confMatrix[2]+confMatrix[3]+confMatrix[4]
++   return(true/total)
++ }
+> getPrecisionFromCM<-function(confMatrix, class_){
++   if(class_==1){
++     index1 = 1
++     index2 = 2
++   }else{
++     index1 = 3
++     index2 = 4
++   }
++   Tp <- confMatrix[index1]
++   Fp <- confMatrix[index2]
++   return(Tp/(Tp+Fp))
++ }
+> # faster implementation with CPP
+> myKnnWithCpp <- function(training, test, k){
++   sourceCpp(paste(path,"/search.cpp", sep=""))
++   train = as.matrix(training)
++   test = as.matrix(test)
++   myRes <- searchCpp(train, test, k)
++   return(myRes)
++ }
+> getTrainingTestCrossValidation <- function(data, k_){
++   folds <- createFolds(factor(data$income), k = k_)
++   trainings <- list(k_)
++   tests <- list(k_)
++   for(i in 1:k_){
++     index_test <- unname(unlist(folds[i]))
++     test <-data[index_test,]
++     training <- data[-index_test,]
++     tests[[i]] <- test
++     trainings[[i]] <- training
++   }
++   return(list(trainings, tests))
++ }
+> externalCrossValidationWithInnerOptimization<-function(trainings, tests, myK, k_fold){
++   for(i in 1:k_fold){
++     training <- trainings[[i]]
++     test <- tests[[i]]
++     for(k in myK){
++       ret <- getTrainingTestCrossValidation(training, k_fold)
++       trains <- ret[[1]]
++       tests <- ret[[2]]
++       cat("###### Started Inner Cross Validation ######\n")
++       for(j in 1:k_fold){
++         cat("External Fold: ")
++         cat(i)
++         cat("\n")
++         cat("Inner Fold: ")
++         cat(j)
++         cat("\n")
++         cat("Parameter: ")
++         cat(k)
++         cat("\n")
++         confusionMatrix <- myKnnWithCpp(trains[[j]], tests[[j]], k)
++         acc <- getAccuracyFromCM(confusionMatrix)
++         prec1 <- getPrecisionFromCM(confusionMatrix, 1)
++         prec2 <- getPrecisionFromCM(confusionMatrix, 2)
++         print(acc)
++         print(prec1)
++         print(prec2)
++       }
++     }
++   }
++ }
+> # main
+> file <- paste(path,"/parsed.csv",sep="")
+> #res <- getTrainingTestHoldOutFromCsv(file, 0.75)
+> #training <- res[[1]]
+> #test <- res[[2]]
+> #confusionMatrix <- myKnnWithCpp(training, test, 9)
+> #getAccuracyFromCM(confusionMatrix)
+> csv_readed <- read.csv(file=file)
+> #csv_readed$income <- factor(csv_readed$income)
+> ret <- getTrainingTestCrossValidation(csv_readed, 5)
+> trainings <- ret[[1]]
+> tests <- ret[[2]]
+> myK <- c(3, 5, 7, 9,11)
+> res <- externalCrossValidationWithInnerOptimization(trainings, tests, myK, 5)
+###### Started Inner Cross Validation ######
+External Fold: 1
+Inner Fold: 1
+Parameter: 3
+31259
+15[1] 0.7338452
+[1] 0.8289362
+[1] 0.4458763
+External Fold: 1
+Inner Fold: 2
+Parameter: 3
+31259
+15[1] 0.728087
+[1] 0.8275034
+[1] 0.4357035
+External Fold: 1
+Inner Fold: 3
+Parameter: 3
+31260
+15[1] 0.7354748
+[1] 0.8348592
+[1] 0.451358
+External Fold: 1
+Inner Fold: 4
+Parameter: 3
+31259
+15[1] 0.7268074
+[1] 0.8214647
+[1] 0.4298571
+External Fold: 1
+Inner Fold: 5
+Parameter: 3
+31259
+15[1] 0.7339731
+[1] 0.8350087
+[1] 0.4488998
+###### Started Inner Cross Validation ######
+External Fold: 1
+Inner Fold: 1
+Parameter: 5
+31259
+15[1] 0.7357646
+[1] 0.8293718
+[1] 0.4493506
+External Fold: 1
+Inner Fold: 2
+Parameter: 5
+31260
+15[1] 0.7364986
+[1] 0.8317677
+[1] 0.4517611
+External Fold: 1
+Inner Fold: 3
+Parameter: 5
+31259
+15[1] 0.7257837
+[1] 0.8244027
+[1] 0.430179
+External Fold: 1
+Inner Fold: 4
+Parameter: 5
+31259
+15[1] 0.7210493
+[1] 0.8256357
+[1] 0.4237955
+External Fold: 1
+Inner Fold: 5
+Parameter: 5
+31259
+15[1] 0.7399872
+[1] 0.8351893
+[1] 0.4590495
+###### Started Inner Cross Validation ######
+External Fold: 1
+Inner Fold: 1
+Parameter: 7
+31259
+15[1] 0.7333333
+[1] 0.8292683
+[1] 0.4451844
+External Fold: 1
+Inner Fold: 2
+Parameter: 7
+31259
+15[1] 0.7209213
+[1] 0.8242591
+[1] 0.4226753
+External Fold: 1
+Inner Fold: 3
+Parameter: 7
+31260
+15[1] 0.7299718
+[1] 0.8293814
+[1] 0.4398195
+External Fold: 1
+Inner Fold: 4
+Parameter: 7
+31259
+15[1] 0.7393474
+[1] 0.8367804
+[1] 0.4585196
+External Fold: 1
+Inner Fold: 5
+Parameter: 7
+31259
+15[1] 0.7339731
+[1] 0.8303144
+[1] 0.4467652
+###### Started Inner Cross Validation ######
+External Fold: 1
+Inner Fold: 1
+Parameter: 9
+31259
+15[1] 0.7371721
+[1] 0.8310362
+[1] 0.4525284
+External Fold: 1
+Inner Fold: 2
+Parameter: 9
+31259
+15[1] 0.731158
+[1] 0.8286594
+[1] 0.4412811
+External Fold: 1
+Inner Fold: 3
+Parameter: 9
+31259
+15[1] 0.7378119
+[1] 0.8299458
+[1] 0.4531659
+External Fold: 1
+Inner Fold: 4
+Parameter: 9
+31260
+15[1] 0.7261326
+[1] 0.8260199
+[1] 0.4318182
+External Fold: 1
+Inner Fold: 5
+Parameter: 9
+31259
+15[1] 0.7320537
+[1] 0.8294269
+[1] 0.4431472
+###### Started Inner Cross Validation ######
+External Fold: 1
+Inner Fold: 1
+Parameter: 11
+31260
+15[1] 0.7312516
+[1] 0.829561
+[1] 0.4419778
+External Fold: 1
+Inner Fold: 2
+Parameter: 11
+31259
+15[1] 0.7288548
+[1] 0.8248981
+[1] 0.4353918
+External Fold: 1
+Inner Fold: 3
+Parameter: 11
+31259
+15[1] 0.7387076
+[1] 0.8376882
+[1] 0.4577603
+External Fold: 1
+Inner Fold: 4
+Parameter: 11
+31259
+15[1] 0.7270633
+[1] 0.8269297
+[1] 0.4337531
+External Fold: 1
+Inner Fold: 5
+Parameter: 11
+31259
+15[1] 0.7324376
+[1] 0.8291766
+[1] 0.4436512
+###### Started Inner Cross Validation ######
+External Fold: 2
+Inner Fold: 1
+Parameter: 3
+31259
+15[1] 0.7301344
+[1] 0.828988
+[1] 0.4397985
+External Fold: 2
+Inner Fold: 2
+Parameter: 3
+31259
+15[1] 0.7257837
+[1] 0.8228601
+[1] 0.4291645
+External Fold: 2
+Inner Fold: 3
+Parameter: 3
+31259
+15[1] 0.7302623
+[1] 0.8291302
+[1] 0.4400806
+External Fold: 2
+Inner Fold: 4
+Parameter: 3
+31259
+15[1] 0.7300064
+[1] 0.827946
+[1] 0.4390244
+External Fold: 2
+Inner Fold: 5
+Parameter: 3
+31260
+15[1] 0.7284361
+[1] 0.827226
+[1] 0.4361702
+###### Started Inner Cross Validation ######
+External Fold: 2
+Inner Fold: 1
+Parameter: 5
+31260
+15[1] 0.7252368
+[1] 0.8272712
+[1] 0.4311972
+External Fold: 2
+Inner Fold: 2
+Parameter: 5
+31259
+15[1] 0.728087
+[1] 0.8284044
+[1] 0.4362181
+External Fold: 2
+Inner Fold: 3
+Parameter: 5
+31259
+15[1] 0.728087
+[1] 0.8295376
+[1] 0.4368499
+External Fold: 2
+Inner Fold: 4
+Parameter: 5
+31259
+15[1] 0.7284709
+[1] 0.8293986
+[1] 0.4373757
+External Fold: 2
+Inner Fold: 5
+Parameter: 5
+31259
+15[1] 0.7310301
+[1] 0.8255125
+[1] 0.4393305
+###### Started Inner Cross Validation ######
+External Fold: 2
+Inner Fold: 1
+Parameter: 7
+31259
+15[1] 0.7324376
+[1] 0.8297399
+[1] 0.4439371
+External Fold: 2
+Inner Fold: 2
+Parameter: 7
+31259
+15[1] 0.7293666
+[1] 0.8285861
+[1] 0.4383493
+External Fold: 2
+Inner Fold: 3
+Parameter: 7
+31259
+15[1] 0.7266795
+[1] 0.8236194
+[1] 0.4310881
+External Fold: 2
+Inner Fold: 4
+Parameter: 7
+31259
+15[1] 0.7283429
+[1] 0.8261092
+[1] 0.4352941
+External Fold: 2
+Inner Fold: 5
+Parameter: 7
+31260
+15[1] 0.7332992
+[1] 0.8318432
+[1] 0.4464464
+###### Started Inner Cross Validation ######
+External Fold: 2
+Inner Fold: 1
+Parameter: 9
+31259
+15[1] 0.7369162
+[1] 0.8317693
+[1] 0.4524053
+External Fold: 2
+Inner Fold: 2
+Parameter: 9
+31260
+15[1] 0.7320195
+[1] 0.8318966
+[1] 0.4443893
+External Fold: 2
+Inner Fold: 3
+Parameter: 9
+31259
+15[1] 0.7294946
+[1] 0.825378
+[1] 0.436722
+External Fold: 2
+Inner Fold: 4
+Parameter: 9
+31259
+15[1] 0.728087
+[1] 0.8239484
+[1] 0.4335591
+External Fold: 2
+Inner Fold: 5
+Parameter: 9
+31259
+15[1] 0.7326935
+[1] 0.8324138
+[1] 0.4456576
+###### Started Inner Cross Validation ######
+External Fold: 2
+Inner Fold: 1
+Parameter: 11
+31259
+15[1] 0.7292386
+[1] 0.8258723
+[1] 0.4365979
+External Fold: 2
+Inner Fold: 2
+Parameter: 11
+31260
+15[1] 0.7321474
+[1] 0.8276331
+[1] 0.4424368
+External Fold: 2
+Inner Fold: 3
+Parameter: 11
+31259
+15[1] 0.7279591
+[1] 0.828262
+[1] 0.4359359
+External Fold: 2
+Inner Fold: 4
+Parameter: 11
+31259
+15[1] 0.7288548
+[1] 0.8247878
+[1] 0.4353247
+External Fold: 2
+Inner Fold: 5
+Parameter: 11
+31259
+15[1] 0.7346129
+[1] 0.834341
+[1] 0.4496545
+###### Started Inner Cross Validation ######
+External Fold: 3
+Inner Fold: 1
+Parameter: 3
+31259
+15[1] 0.7333333
+[1] 0.8297182
+[1] 0.4454082
+External Fold: 3
+Inner Fold: 2
+Parameter: 3
+31259
+15[1] 0.7319258
+[1] 0.828835
+[1] 0.4426313
+External Fold: 3
+Inner Fold: 3
+Parameter: 3
+31259
+15[1] 0.7301344
+[1] 0.8273038
+[1] 0.4388747
+External Fold: 3
+Inner Fold: 4
+Parameter: 3
+31259
+15[1] 0.7247601
+[1] 0.8301427
+[1] 0.4320928
+External Fold: 3
+Inner Fold: 5
+Parameter: 3
+31260
+15[1] 0.7299718
+[1] 0.8276923
+[1] 0.4389002
+###### Started Inner Cross Validation ######
+External Fold: 3
+Inner Fold: 1
+Parameter: 5
+31259
+15[1] 0.7234805
+[1] 0.824417
+[1] 0.4266263
+External Fold: 3
+Inner Fold: 2
+Parameter: 5
+31260
+15[1] 0.7417456
+[1] 0.8397369
+[1] 0.4636542
+External Fold: 3
+Inner Fold: 3
+Parameter: 5
+31259
+15[1] 0.7296225
+[1] 0.8261832
+[1] 0.4374034
+External Fold: 3
+Inner Fold: 4
+Parameter: 5
+31259
+15[1] 0.7315419
+[1] 0.8275158
+[1] 0.4412976
+External Fold: 3
+Inner Fold: 5
+Parameter: 5
+31259
+15[1] 0.7239923
+[1] 0.8259897
+[1] 0.4284289
+###### Started Inner Cross Validation ######
+External Fold: 3
+Inner Fold: 1
+Parameter: 7
+31259
+15[1] 0.7351248
+[1] 0.8301244
+[1] 0.4486125
+External Fold: 3
+Inner Fold: 2
+Parameter: 7
+31260
+15[1] 0.7321474
+[1] 0.8310125
+[1] 0.4441662
+External Fold: 3
+Inner Fold: 3
+Parameter: 7
+31259
+15[1] 0.7292386
+[1] 0.8254292
+[1] 0.4363354
+External Fold: 3
+Inner Fold: 4
+Parameter: 7
+31259
+15[1] 0.7315419
+[1] 0.8307825
+[1] 0.443
+External Fold: 3
+Inner Fold: 5
+Parameter: 7
+31259
+15[1] 0.7297505
+[1] 0.8294654
+[1] 0.4394394
+###### Started Inner Cross Validation ######
+External Fold: 3
+Inner Fold: 1
+Parameter: 9
+31260
+15[1] 0.7420015
+[1] 0.8334465
+[1] 0.4620582
+External Fold: 3
+Inner Fold: 2
+Parameter: 9
+31259
+15[1] 0.7274472
+[1] 0.8256787
+[1] 0.4336057
+External Fold: 3
+Inner Fold: 3
+Parameter: 9
+31259
+15[1] 0.7390915
+[1] 0.8321429
+[1] 0.4563307
+External Fold: 3
+Inner Fold: 4
+Parameter: 9
+31259
+15[1] 0.7260397
+[1] 0.8255734
+[1] 0.4313229
+External Fold: 3
+Inner Fold: 5
+Parameter: 9
+31259
+15[1] 0.725016
+[1] 0.8272414
+[1] 0.4307692
+###### Started Inner Cross Validation ######
+External Fold: 3
+Inner Fold: 1
+Parameter: 11
+31259
+15[1] 0.7301344
+[1] 0.828988
+[1] 0.4397985
+External Fold: 3
+Inner Fold: 2
+Parameter: 11
+31259
+15[1] 0.7398592
+[1] 0.8326531
+[1] 0.4578811
+External Fold: 3
+Inner Fold: 3
+Parameter: 11
+31260
+15[1] 0.7266445
+[1] 0.8298683
+[1] 0.4348678
+External Fold: 3
+Inner Fold: 4
+Parameter: 11
+31259
+15[1] 0.728087
+[1] 0.8263841
+[1] 0.4350484
+External Fold: 3
+Inner Fold: 5
+Parameter: 11
+31259
+15[1] 0.7288548
+[1] 0.8266735
+[1] 0.4364472
+###### Started Inner Cross Validation ######
+External Fold: 4
+Inner Fold: 1
+Parameter: 3
+31258
+15[1] 0.728087
+[1] 0.8273912
+[1] 0.4356386
+External Fold: 4
+Inner Fold: 2
+Parameter: 3
+31258
+15[1] 0.7351248
+[1] 0.8309137
+[1] 0.4489796
+External Fold: 4
+Inner Fold: 3
+Parameter: 3
+31259
+15[1] 0.7423855
+[1] 0.8319541
+[1] 0.4622293
+External Fold: 4
+Inner Fold: 4
+Parameter: 3
+31259
+15[1] 0.7331712
+[1] 0.8274516
+[1] 0.44375
+External Fold: 4
+Inner Fold: 5
+Parameter: 3
+31258
+15[1] 0.7284709
+[1] 0.8316849
+[1] 0.4385965
+###### Started Inner Cross Validation ######
+External Fold: 4
+Inner Fold: 1
+Parameter: 5
+31258
+15[1] 0.7310301
+[1] 0.831236
+[1] 0.4424032
+External Fold: 4
+Inner Fold: 2
+Parameter: 5
+31260
+15[1] 0.7358249
+[1] 0.8290366
+[1] 0.4491393
+External Fold: 4
+Inner Fold: 3
+Parameter: 5
+31258
+15[1] 0.7339731
+[1] 0.8297509
+[1] 0.4464926
+External Fold: 4
+Inner Fold: 4
+Parameter: 5
+31258
+15[1] 0.7296225
+[1] 0.8267394
+[1] 0.4377242
+External Fold: 4
+Inner Fold: 5
+Parameter: 5
+31258
+15[1] 0.7310301
+[1] 0.8291931
+[1] 0.4413549
+###### Started Inner Cross Validation ######
+External Fold: 4
+Inner Fold: 1
+Parameter: 7
+31258
+15[1] 0.731158
+[1] 0.8310369
+[1] 0.4425087
+External Fold: 4
+Inner Fold: 2
+Parameter: 7
+31259
+15[1] 0.7330433
+[1] 0.8301951
+[1] 0.4452333
+External Fold: 4
+Inner Fold: 3
+Parameter: 7
+31259
+15[1] 0.7362426
+[1] 0.8324204
+[1] 0.4513185
+External Fold: 4
+Inner Fold: 4
+Parameter: 7
+31258
+15[1] 0.7338452
+[1] 0.8257205
+[1] 0.4442083
+External Fold: 4
+Inner Fold: 5
+Parameter: 7
+31258
+15[1] 0.725144
+[1] 0.8231489
+[1] 0.4283505
+###### Started Inner Cross Validation ######
+External Fold: 4
+Inner Fold: 1
+Parameter: 9
+31258
+15[1] 0.7333333
+[1] 0.8284839
+[1] 0.4447884
+External Fold: 4
+Inner Fold: 2
+Parameter: 9
+31259
+15[1] 0.7285641
+[1] 0.8237386
+[1] 0.4339623
+External Fold: 4
+Inner Fold: 3
+Parameter: 9
+31258
+15[1] 0.7260397
+[1] 0.8223729
+[1] 0.4292428
+External Fold: 4
+Inner Fold: 4
+Parameter: 9
+31258
+15[1] 0.7378119
+[1] 0.8337903
+[1] 0.4547751
+External Fold: 4
+Inner Fold: 5
+Parameter: 9
+31259
+15[1] 0.7277963
+[1] 0.8276395
+[1] 0.4353947
+###### Started Inner Cross Validation ######
+External Fold: 4
+Inner Fold: 1
+Parameter: 11
+31258
+15[1] 0.7373001
+[1] 0.8301663
+[1] 0.4523686
+External Fold: 4
+Inner Fold: 2
+Parameter: 11
+31258
+15[1] 0.7337172
+[1] 0.8272358
+[1] 0.4447933
+External Fold: 4
+Inner Fold: 3
+Parameter: 11
+31258
+15[1] 0.7284709
+[1] 0.826808
+[1] 0.4359105
+External Fold: 4
+Inner Fold: 4
+Parameter: 11
+31259
+15[1] 0.7413617
+[1] 0.8346981
+[1] 0.4610656
+External Fold: 4
+Inner Fold: 5
+Parameter: 11
+31259
+15[1] 0.7295879
+[1] 0.8286155
+[1] 0.4387909
+###### Started Inner Cross Validation ######
+External Fold: 5
+Inner Fold: 1
+Parameter: 3
+31259
+15[1] 0.7325314
+[1] 0.8287274
+[1] 0.4436475
+External Fold: 5
+Inner Fold: 2
+Parameter: 3
+31259
+15[1] 0.728948
+[1] 0.8271499
+[1] 0.4366412
+External Fold: 5
+Inner Fold: 3
+Parameter: 3
+31258
+15[1] 0.7358925
+[1] 0.8329044
+[1] 0.4511581
+External Fold: 5
+Inner Fold: 4
+Parameter: 3
+31258
+15[1] 0.7181062
+[1] 0.8222528
+[1] 0.4171229
+External Fold: 5
+Inner Fold: 5
+Parameter: 3
+31258
+15[1] 0.7220729
+[1] 0.8243081
+[1] 0.4244244
+###### Started Inner Cross Validation ######
+External Fold: 5
+Inner Fold: 1
+Parameter: 5
+31258
+15[1] 0.7330774
+[1] 0.8269785
+[1] 0.4435737
+External Fold: 5
+Inner Fold: 2
+Parameter: 5
+31260
+15[1] 0.7290413
+[1] 0.8328405
+[1] 0.4399225
+External Fold: 5
+Inner Fold: 3
+Parameter: 5
+31258
+15[1] 0.7224568
+[1] 0.8229559
+[1] 0.4240731
+External Fold: 5
+Inner Fold: 4
+Parameter: 5
+31258
+15[1] 0.725144
+[1] 0.8196666
+[1] 0.4259062
+External Fold: 5
+Inner Fold: 5
+Parameter: 5
+31258
+15[1] 0.7361484
+[1] 0.8339928
+[1] 0.452048
+###### Started Inner Cross Validation ######
+External Fold: 5
+Inner Fold: 1
+Parameter: 7
+31259
+15[1] 0.7243409
+[1] 0.825296
+[1] 0.4282838
+External Fold: 5
+Inner Fold: 2
+Parameter: 7
+31258
+15[1] 0.728215
+[1] 0.8305935
+[1] 0.4376228
+External Fold: 5
+Inner Fold: 3
+Parameter: 7
+31259
+15[1] 0.7334272
+[1] 0.8271479
+[1] 0.4443283
+External Fold: 5
+Inner Fold: 4
+Parameter: 7
+31258
+15[1] 0.7360205
+[1] 0.8310027
+[1] 0.4505382
+External Fold: 5
+Inner Fold: 5
+Parameter: 7
+31258
+15[1] 0.7324376
+[1] 0.8278326
+[1] 0.442953
+###### Started Inner Cross Validation ######
+External Fold: 5
+Inner Fold: 1
+Parameter: 9
+31259
+15[1] 0.7247249
+[1] 0.825356
+[1] 0.4292191
+External Fold: 5
+Inner Fold: 2
+Parameter: 9
+31258
+15[1] 0.7319258
+[1] 0.8301887
+[1] 0.4433249
+External Fold: 5
+Inner Fold: 3
+Parameter: 9
+31259
+15[1] 0.7294599
+[1] 0.8261536
+[1] 0.4368882
+External Fold: 5
+Inner Fold: 4
+Parameter: 9
+31258
+15[1] 0.7376839
+[1] 0.8339907
+[1] 0.4546371
+External Fold: 5
+Inner Fold: 5
+Parameter: 9
+31258
+15[1] 0.7255278
+[1] 0.828152
+[1] 0.4320988
+###### Started Inner Cross Validation ######
+External Fold: 5
+Inner Fold: 1
+Parameter: 11
+31258
+15[1] 0.7287268
+[1] 0.8295709
+[1] 0.4378728
+External Fold: 5
+Inner Fold: 2
+Parameter: 11
+31259
+15[1] 0.7316355
+[1] 0.8264042
+[1] 0.4409162
+External Fold: 5
+Inner Fold: 3
+Parameter: 11
+31259
+15[1] 0.7256207
+[1] 0.8284085
+[1] 0.4321658
+External Fold: 5
+Inner Fold: 4
+Parameter: 11
+31258
+15[1] 0.7303903
+[1] 0.8274744
+[1] 0.4393862
+External Fold: 5
+Inner Fold: 5
+Parameter: 11
+31258
+15[1] 0.725144
+[1] 0.8281763
+[1] 0.4315271
