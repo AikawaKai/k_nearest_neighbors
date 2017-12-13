@@ -1,4 +1,5 @@
 library(caret)
+library(parallel)
 # View(class::knn)
 library(Rcpp)
 path <- "/home/kai/Documents/Unimi/MetodiStatisticiApp/k_nearest_neighbors"
@@ -160,6 +161,46 @@ externalCrossValidationWithInnerOptimization<-function(trainings, tests, myK, k_
     }
   }
 }
+innerCrossValidation <- function(training, i, k_fold, myK){
+  ret <- getTrainingTestCrossValidation(training, k_fold)
+  trains <- ret[[1]]
+  tests <- ret[[2]]
+  for(k in myK){
+    cat("###### Started Inner Cross Validation ######\n")
+    for(j in 1:k_fold){
+      cat("External Fold: ")
+      cat(i)
+      cat("\n")
+      cat("Inner Fold: ")
+      cat(j)
+      cat("\n")
+      cat("Parameter: ")
+      cat(k)
+      cat("\n")
+      confusionMatrix <- myKnnWithCpp(trains[[j]], tests[[j]], k)
+      acc <- getAccuracyFromCM(confusionMatrix)
+      prec1 <- getPrecisionFromCM(confusionMatrix, 1)
+      prec2 <- getPrecisionFromCM(confusionMatrix, 2)
+      print(acc)
+      print(prec1)
+      print(prec2)
+    }
+  }
+}
+
+parallelExternalCrossValidationWithInnerOptimization <- function(trainings, tests, myK, k_fold){
+  no_cores <- detectCores() -1
+  cl <- makeCluster(no_cores)
+  clusterExport(cl, list("myK", "innerCrossValidation", "getTrainingTestCrossValidation", "createFolds", "myKnnWithCpp", "sourceCpp", "path"))
+   for(i in 1:k_fold){
+    training <- trainings[[i]]
+    test <- tests[[i]]
+    parLapply(cl, trainings, function(x) c(innerCrossValidation(x, i, k_fold, myK)))
+   }
+}
+
+
+
 # main
 file <- paste(path,"/parsed.csv",sep="")
 #res <- getTrainingTestHoldOutFromCsv(file, 0.75)
@@ -174,4 +215,5 @@ trainings <- ret[[1]]
 tests <- ret[[2]]
 myK <- c(3, 5, 7, 9,11)
 res <- externalCrossValidationWithInnerOptimization(trainings, tests, myK, 5)
+res <- parallelExternalCrossValidationWithInnerOptimization(trainings, tests, myK, 5)
 
