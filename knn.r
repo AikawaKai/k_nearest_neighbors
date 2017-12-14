@@ -191,7 +191,7 @@ innerCrossValidation <- function(training, i, k_fold, myK){
 parallelExternalCrossValidationWithInnerOptimization <- function(trainings, tests, myK, k_fold){
   no_cores <- detectCores() -1
   cl <- makeCluster(no_cores)
-  clusterExport(cl, list("myK", "innerCrossValidation", "getTrainingTestCrossValidation", "createFolds", "myKnnWithCpp", "sourceCpp", "path"))
+  clusterExport(cl, list("getPrecisionFromCM", "myK", "innerCrossValidation", "getTrainingTestCrossValidation", "createFolds", "myKnnWithCpp", "sourceCpp", "path", "getAccuracyFromCM"))
    for(i in 1:k_fold){
     training <- trainings[[i]]
     test <- tests[[i]]
