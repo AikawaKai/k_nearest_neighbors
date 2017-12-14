@@ -88,9 +88,9 @@ NumericVector searchCpp(NumericMatrix training, NumericMatrix test, int k) {
   int numColTr = training.cols();
   int numRowTe = test.rows();
   int numColTe = test.cols();
-  std::cout<<numRowTr;
+  /*std::cout<<numRowTr;
   std::cout<<"\n";
-  std::cout<<numColTr;
+  std::cout<<numColTr;*/
   NumericVector AllDistances = NumericVector(numRowTe);
   for (int i=0;i<numRowTe;i++)
   {
