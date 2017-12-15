@@ -162,6 +162,7 @@ externalCrossValidationWithInnerOptimization<-function(data, myK, k_fold){
     fold_acc <- getAccuracyFromCM(confusionMatrix)
     accuracy_x_fold[[i]] <- fold_acc
   }
+  print(max_k)
   print(accuracy_x_fold)
   return(mean(as.numeric(accuracy_x_fold)))
 }
@@ -197,7 +198,8 @@ parallelExternalCrossValidationWithInnerOptimization <- function(data, myK, k_fo
   no_cores <- detectCores() -1
   cl <- makeCluster(no_cores)
   clusterExport(cl, list("path", "trainings","tests", "myK", "getPrecisionFromCM", "innerCrossValidation","getTrainingTestCrossValidation", "createFolds", "myKnnWithCpp", "sourceCpp", "getAccuracyFromCM"))
-  res_k <- parLapply(cl, trainings, function(x) c(innerCrossValidation(x, k_fold, myK)))
+  res_k <- parLapply(cl, 1:k_fold, function(x) c(innerCrossValidation(trainings[[x]], k_fold, myK)))
+  print(res_k)
   final_res <- parLapply(cl, 1:k_fold, function(x) c(myKnnWithCpp(trainings[[x]], tests[[x]], res_k[[x]])))
   res <- list(k_fold)
   tot <- 0
