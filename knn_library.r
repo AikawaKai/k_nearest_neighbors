@@ -3,34 +3,31 @@ library(parallel)
 library(Rcpp)
 path <- "/home/kai/Documents/Unimi/MetodiStatisticiApp/k_nearest_neighbors"
 # View(class::knn)
-set.seed(1)
 # basic hold out
-myHoldOut<-function(csv_readed, perc, seed){
+myHoldOut<-function(csv_readed, perc){
   ## 75% of the sample size
   smp_size <- floor(perc * nrow(csv_readed))
-  smp_size
-  set.seed(seed)
   train_ind <- sample(seq_len(nrow(csv_readed)), size = smp_size)
-  training = csv_readed[train_ind,]
-  test = csv_readed[-train_ind,]
+  training <- csv_readed[train_ind,]
+  test <- csv_readed[-train_ind,]
   return(list(training, test))
 }
 
 # extract from csv training and test with split=perc_train
 getTrainingTestHoldOutFromCsv <- function(file_, perc_train){
-  csv_readed = read.csv(file=file_)
+  csv_readed <- read.csv(file=file_)
   #csv_readed$income = factor(csv_readed$income)
-  return(myHoldOut(csv_readed, perc_train, 123))
+  return(myHoldOut(csv_readed, perc_train))
 }
 
 # euclidean distance
 calculateDistance <- function(x1, x2){
-  d = 0
+  d <- 0
   for(i in c(1:(length(x1)-1) ))
   {
-    d = d + (x1[[i]]-x2[[i]])^2
+    d <- d + (x1[[i]]-x2[[i]])^2
   }
-  d = sqrt(d)
+  d <- sqrt(d)
   return(d)
 }
 
@@ -55,18 +52,18 @@ checkTpFpTnFn<-function(res, expected){
 myKnn <- function(training, test, k){
   myconfusionMatrix <- c(0, 0, 0, 0)
   training = training
-  test = test
-  list_ = list()
+  test <- test
+  list_ <- list()
   for (i in 1:nrow(test)){
     distances <- c()
     classes <- c()
     for(j in 1:nrow(training)){
-      d = calculateDistance(test[i,], training[j,])
+      d <- calculateDistance(test[i,], training[j,])
       distances <- c(distances, d)
       classes <- c(classes, training[j,][[15]])
     }
-    df_res = data.frame(distances, classes)
-    df_res = df_res[order(df_res$distances),]
+    df_res <- data.frame(distances, classes)
+    df_res <- df_res[order(df_res$distances),]
     k_classes <- df_res[1:k,2]
     count_1 <- 0
     count_2 <- 0
@@ -82,7 +79,7 @@ myKnn <- function(training, test, k){
     }else{
       res <- checkTpFpTnFn(as.integer(test[i,15]),2)
     }
-    myconfusionMatrix[res] = myconfusionMatrix[res]+1
+    myconfusionMatrix[res] <- myconfusionMatrix[res]+1
   }  
   return(myconfusionMatrix)
 }
@@ -98,11 +95,11 @@ getAccuracyFromCM<-function(confMatrix){
 #get precision from confusion matrix
 getPrecisionFromCM<-function(confMatrix, class_){
   if(class_==1){
-    index1 = 1
-    index2 = 2
+    index1 <- 1
+    index2 <- 2
   }else{
-    index1 = 3
-    index2 = 4
+    index1 <- 3
+    index2 <- 4
   }
   Tp <- confMatrix[index1]
   Fp <- confMatrix[index2]
@@ -112,8 +109,8 @@ getPrecisionFromCM<-function(confMatrix, class_){
 # faster implementation with CPP
 myKnnWithCpp <- function(training, test, k){
   sourceCpp(paste(path,"/search.cpp", sep=""))
-  train = as.matrix(training)
-  test = as.matrix(test)
+  train <- as.matrix(training)
+  test <- as.matrix(test)
   myRes <- searchCpp(train, test, k)
   return(myRes)
 }
