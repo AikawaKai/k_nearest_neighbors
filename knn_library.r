@@ -197,7 +197,7 @@ parallelExternalCrossValidationWithInnerOptimization <- function(data, myK, k_fo
   tests <- ret[[2]]
   no_cores <- detectCores() -1
   cl <- makeCluster(no_cores)
-  clusterExport(cl, list("path", "trainings","tests", "myK", "getPrecisionFromCM", "innerCrossValidation","getTrainingTestCrossValidation", "createFolds", "myKnnWithCpp", "sourceCpp", "getAccuracyFromCM"))
+  clusterExport(cl, list("path", "myK", "getPrecisionFromCM", "innerCrossValidation","getTrainingTestCrossValidation", "createFolds", "myKnnWithCpp", "sourceCpp", "getAccuracyFromCM"))
   res_k <- parLapply(cl, 1:k_fold, function(x) c(innerCrossValidation(trainings[[x]], k_fold, myK)))
   print(res_k)
   final_res <- parLapply(cl, 1:k_fold, function(x) c(myKnnWithCpp(trainings[[x]], tests[[x]], res_k[[x]])))
