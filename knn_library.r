@@ -4,6 +4,7 @@ library(Rcpp)
 path <- "/home/kai/Documents/Unimi/MetodiStatisticiApp/k_nearest_neighbors"
 # View(class::knn)
 # basic hold out
+
 myHoldOut<-function(csv_readed, perc){
   ## 75% of the sample size
   smp_size <- floor(perc * nrow(csv_readed))
@@ -51,7 +52,7 @@ checkTpFpTnFn<-function(res, expected){
 # slow implementation
 myKnn <- function(training, test, k){
   myconfusionMatrix <- c(0, 0, 0, 0)
-  training = training
+  training <- training
   test <- test
   list_ <- list()
   for (i in 1:nrow(test)){
@@ -189,8 +190,14 @@ innerCrossValidation <- function(training, k_fold, myK){
 parallelExternalCrossValidationWithInnerOptimization <- function(trainings, tests, myK, k_fold){
   no_cores <- detectCores() -1
   cl <- makeCluster(no_cores)
-  clusterExport(cl, list("getPrecisionFromCM", "myK", "innerCrossValidation", "getTrainingTestCrossValidation", "createFolds", "myKnnWithCpp", "sourceCpp", "path", "getAccuracyFromCM"))
-  results <- list(k_fold)
-  res <- parLapply(cl, trainings, function(x) c(innerCrossValidation(x, k_fold, myK)))
-  return(res)
+  clusterExport(cl, list("path", "trainings","tests", "myK", "getPrecisionFromCM", "innerCrossValidation","getTrainingTestCrossValidation", "createFolds", "myKnnWithCpp", "sourceCpp", "getAccuracyFromCM"))
+  res_k <- parLapply(cl, trainings, function(x) c(innerCrossValidation(x, k_fold, myK)))
+  num_fold <- length(trainings)
+  final_res <- parLapply(cl, 1:num_fold, function(x) c(myKnnWithCpp(trainings[[x]], tests[[x]], res_k[[x]])))
+  res <- list(num_fold)
+  tot <- 0
+  for(i in 1:num_fold){
+    tot <- tot + getAccuracyFromCM(final_res[[i]])
+  }
+  return(tot/num_fold)
 }
