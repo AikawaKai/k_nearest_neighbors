@@ -132,7 +132,10 @@ getTrainingTestCrossValidation <- function(data, k_){
 }
 
 # cross validation with inner optimization and validation
-externalCrossValidationWithInnerOptimization<-function(trainings, tests, myK, k_fold){
+externalCrossValidationWithInnerOptimization<-function(data, myK, k_fold){
+  ret <- getTrainingTestCrossValidation(data, k_fold)
+  trainings <- ret[[1]]
+  tests <- ret[[2]]
   max_k <- list(k_fold)
   accuracy_x_fold <- list(k_fold)
   for(i in 1:k_fold){
@@ -187,7 +190,10 @@ innerCrossValidation <- function(training, k_fold, myK){
 }
 
 # parallel implementation for cross validation with inner optimization
-parallelExternalCrossValidationWithInnerOptimization <- function(trainings, tests, myK, k_fold){
+parallelExternalCrossValidationWithInnerOptimization <- function(data, myK, k_fold){
+  ret <- getTrainingTestCrossValidation(data, k_fold)
+  trainings <- ret[[1]]
+  tests <- ret[[2]]
   no_cores <- detectCores() -1
   cl <- makeCluster(no_cores)
   clusterExport(cl, list("path", "trainings","tests", "myK", "getPrecisionFromCM", "innerCrossValidation","getTrainingTestCrossValidation", "createFolds", "myKnnWithCpp", "sourceCpp", "getAccuracyFromCM"))
@@ -197,7 +203,10 @@ parallelExternalCrossValidationWithInnerOptimization <- function(trainings, test
   res <- list(num_fold)
   tot <- 0
   for(i in 1:num_fold){
-    tot <- tot + getAccuracyFromCM(final_res[[i]])
+    curr_accur <- getAccuracyFromCM(final_res[[i]])
+    print(curr_accur)
+    tot <- tot + curr_accur
   }
+  stopCluster(cl)
   return(tot/num_fold)
 }
