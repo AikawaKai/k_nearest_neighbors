@@ -2,7 +2,7 @@ source("/home/kai/Documents/Unimi/MetodiStatisticiApp/k_nearest_neighbors/knn_li
 
 file <- paste(path,"/parsed.csv",sep="")
 csv_readed <- read.csv(file=file)
-csv_readed <- csv_readed[1:10000,]
+csv_readed <- csv_readed[1:4000,]
 #csv_readed$income <- factor(csv_readed$income)
 ret <- getTrainingTestCrossValidation(csv_readed, 5)
 trainings <- ret[[1]]

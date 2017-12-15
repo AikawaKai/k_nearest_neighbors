@@ -136,6 +136,7 @@ getTrainingTestCrossValidation <- function(data, k_){
 # cross validation with inner optimization and validation
 externalCrossValidationWithInnerOptimization<-function(trainings, tests, myK, k_fold){
   max_k <- list(k_fold)
+  accuracy_x_fold <- list(k_fold)
   for(i in 1:k_fold){
     training <- trainings[[i]]
     test <- tests[[i]]
@@ -154,9 +155,14 @@ externalCrossValidationWithInnerOptimization<-function(trainings, tests, myK, k_
       total_res[[l]] <- mean(as.numeric(res_k), na.rm = TRUE)
       l<-l+1
     }
-    max_k[[i]]<-as.numeric(myK[which.max(total_res)])
+    sel_k <- as.numeric(myK[which.max(total_res)])
+    max_k[[i]]<-sel_k
+    confusionMatrix <- myKnnWithCpp(training, test, sel_k)
+    fold_acc <- getAccuracyFromCM(confusionMatrix)
+    accuracy_x_fold[[i]] <- fold_acc
   }
-  return(max_k)
+  print(accuracy_x_fold)
+  return(mean(as.numeric(accuracy_x_fold)))
 }
 
 # inner cross validation
