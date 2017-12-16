@@ -28,6 +28,7 @@ int classify(NumericMatrix training, std::multimap<double,int> res, int k){
     }else{
       count_2=count_2+1;
     }
+    it++;
   }
   if(count_1>count_2){
     return 1;

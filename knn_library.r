@@ -116,6 +116,28 @@ myKnnWithCpp <- function(training, test, k){
   return(myRes)
 }
 
+getTrainingTestCrossValidation3 <- function(data, k_){
+  num_el <- nrow(data)/k_
+  start <- 1
+  index <- list(k_)
+  index[[1]]<-seq(start, num_el, by=1)
+  start <- start + num_el
+  for (i in seq(2,k_-1, by = 1)){
+    prec <- start 
+    start <- start + num_el 
+    start <- start + 1
+    index[[i]] <- seq(prec, start, by=1)
+  }
+  index[[k_]] <- seq(start+1, nrow(data), by=1)
+  trainings <- list(k_)
+  tests <- list(k_)
+  for(i in 1:k_){
+    tests[[i]] <- data[index[[i]],]
+    trainings[[i]] <- data[-index[[i]],]
+  }
+  return(list(trainings, tests))
+}
+
 getTrainingTestCrossValidation2 <- function(data, k_){
   #Create k_ equally size folds
   folds <- cut(seq(1,nrow(data)),breaks=k_,labels=FALSE)
@@ -151,23 +173,23 @@ getTrainingTestCrossValidation <- function(data, k_){
 
 # cross validation with inner optimization and validation
 externalCrossValidationWithInnerOptimization<-function(data, myK, k_fold){
-  ret <- getTrainingTestCrossValidation2(data, k_fold)
-  trainings <- ret[[1]]
-  tests <- ret[[2]]
+  ret <- getTrainingTestCrossValidation3(data, k_fold)
+  train_fold <- ret[[1]]
+  test_fold <- ret[[2]]
   max_k <- list(k_fold)
   accuracy_x_fold <- list(k_fold)
   for(i in 1:k_fold){
-    training <- trainings[[i]]
-    test <- tests[[i]]
+    curr_train <- train_fold[[i]]
+    curr_test <- test_fold[[i]]
+    ret <- getTrainingTestCrossValidation3(curr_train, k_fold)
+    inner_train <- ret[[1]]
+    inner_test <- ret[[2]]
     total_res <- list(length(myK))
     l <- 1
     for(k in myK){
-      ret <- getTrainingTestCrossValidation2(training, k_fold)
-      trains <- ret[[1]]
-      tests <- ret[[2]]
       res_k <- list(k_fold)
       for(j in 1:k_fold){
-        confusionMatrix <- myKnnWithCpp(trains[[j]], tests[[j]], k)
+        confusionMatrix <- myKnnWithCpp(inner_train[[j]], inner_test[[j]], k)
         acc <- getAccuracyFromCM(confusionMatrix)
         res_k[[j]] <- acc
       }
@@ -176,7 +198,7 @@ externalCrossValidationWithInnerOptimization<-function(data, myK, k_fold){
     }
     sel_k <- as.numeric(myK[which.max(total_res)])
     max_k[[i]]<-sel_k
-    confusionMatrix <- myKnnWithCpp(training, test, sel_k)
+    confusionMatrix <- myKnnWithCpp(curr_train, curr_test, sel_k)
     fold_acc <- getAccuracyFromCM(confusionMatrix)
     accuracy_x_fold[[i]] <- fold_acc
   }
@@ -187,18 +209,20 @@ externalCrossValidationWithInnerOptimization<-function(data, myK, k_fold){
 
 # inner cross validation
 innerCrossValidation <- function(training, k_fold, myK){
+  ret <- getTrainingTestCrossValidation3(training, k_fold)
+  trains <- ret[[1]]
+  tests <- ret[[2]]
   total_res <- list(length(myK))
   l <- 1
   for(k in myK){
-    ret <- getTrainingTestCrossValidation2(training, k_fold)
-    trains <- ret[[1]]
-    tests <- ret[[2]]
     res_k <- list(k_fold)
     for(j in 1:k_fold){
       confusionMatrix <- myKnnWithCpp(trains[[j]], tests[[j]], k)
       acc <- getAccuracyFromCM(confusionMatrix)
       res_k[[j]] <- acc
     }
+    fileConn<-paste(path,"/output2.txt", sep = "")
+    lapply((unlist(lapply(res_k, paste, collapse=" "))), cat, file=fileConn, append=TRUE,sep="\n")
     total_res[[l]] <- mean(as.numeric(res_k), na.rm = TRUE)
     l<-l+1
   }
@@ -207,18 +231,18 @@ innerCrossValidation <- function(training, k_fold, myK){
 
 # parallel implementation for cross validation with inner optimization
 parallelExternalCrossValidationWithInnerOptimization <- function(data, myK, k_fold){
-  ret <- getTrainingTestCrossValidation2(data, k_fold)
+  ret <- getTrainingTestCrossValidation3(data, k_fold)
   trainings <- ret[[1]]
   tests <- ret[[2]]
   no_cores <- detectCores() -1
   cl <- makeCluster(no_cores)
-  clusterExport(cl, list("path", "myK", "getPrecisionFromCM", "innerCrossValidation","getTrainingTestCrossValidation2", "createFolds", "myKnnWithCpp", "sourceCpp", "getAccuracyFromCM"))
+  clusterExport(cl, list("path", "myK", "getPrecisionFromCM", "innerCrossValidation","getTrainingTestCrossValidation3", "createFolds", "myKnnWithCpp", "sourceCpp", "getAccuracyFromCM"))
   res_k <- parLapply(cl, 1:k_fold, function(x) c(innerCrossValidation(trainings[[x]], k_fold, myK)))
-  fileConn<-paste(path,"output2.txt")
-  lapply((unlist(lapply(res_k, paste, collapse=" "))), cat, file=fileConn, append=TRUE)
+  fileConn<-paste(path,"/output2.txt", sep = "")
+  lapply((unlist(lapply(res_k, paste, collapse=" "))), cat, file=fileConn, append=TRUE,sep="\n")
   final_res <- parLapply(cl, 1:k_fold, function(x) c(myKnnWithCpp(trainings[[x]], tests[[x]], res_k[[x]])))
   final_res <-lapply(final_res, getAccuracyFromCM)
-  lapply(unlist(lapply(final_res, paste, collapse=" ")), cat, file=fileConn, append=TRUE)
+  lapply(unlist(lapply(final_res, paste, collapse=" ")), cat, file=fileConn, append=TRUE, sep="\n")
   stopCluster(cl)
   return(mean(as.numeric(final_res)))
 }
