@@ -1,10 +1,10 @@
 library(caret)
 library(parallel)
 library(Rcpp)
+require(stats)
 path <- "/home/kai/Documents/Unimi/MetodiStatisticiApp/k_nearest_neighbors"
-# View(class::knn)
-# basic hold out
 
+# basic hold out
 myHoldOut<-function(csv_readed, perc){
   ## 75% of the sample size
   smp_size <- floor(perc * nrow(csv_readed))
@@ -85,7 +85,6 @@ myKnn <- function(training, test, k){
   return(myconfusionMatrix)
 }
 
-
 # get accuracy from confusion matrix
 getAccuracyFromCM<-function(confMatrix){
   true <- confMatrix[1]+confMatrix[3]
@@ -116,6 +115,7 @@ myKnnWithCpp <- function(training, test, k){
   return(myRes)
 }
 
+# basic split for crossvalidation 3
 getTrainingTestCrossValidation3 <- function(data, k_){
   num_el <- nrow(data)/k_
   start <- 1
@@ -138,13 +138,13 @@ getTrainingTestCrossValidation3 <- function(data, k_){
   return(list(trainings, tests))
 }
 
+# basic split for crossvalidation 2
 getTrainingTestCrossValidation2 <- function(data, k_){
   #Create k_ equally size folds
   folds <- cut(seq(1,nrow(data)),breaks=k_,labels=FALSE)
-
   trainings <- list(k_)
   tests <- list(k_)
-  for(i in 1:10){
+  for(i in 1:k_){
     #Segement your data by fold using the which() function 
     testIndexes <- which(folds==i,arr.ind=TRUE)
     testData <- data[testIndexes, ]
@@ -156,7 +156,7 @@ getTrainingTestCrossValidation2 <- function(data, k_){
   return(list(trainings, tests))
 }
 
-# get k fold for cross validation
+# get k fold for cross validation with stratified sampling
 getTrainingTestCrossValidation <- function(data, k_){
   folds <- createFolds(factor(data$income), k = k_)
   trainings <- list(k_)
@@ -196,6 +196,7 @@ externalCrossValidationWithInnerOptimization<-function(data, myK, k_fold){
       total_res[[l]] <- mean(as.numeric(res_k), na.rm = TRUE)
       l<-l+1
     }
+    plotMyResults(myK,total_res, paste("fold_",toString(i), sep=""))
     sel_k <- as.numeric(myK[which.max(total_res)])
     max_k[[i]]<-sel_k
     confusionMatrix <- myKnnWithCpp(curr_train, curr_test, sel_k)
@@ -208,7 +209,7 @@ externalCrossValidationWithInnerOptimization<-function(data, myK, k_fold){
 }
 
 # inner cross validation
-innerCrossValidation <- function(training, k_fold, myK){
+innerCrossValidation <- function(training, k_fold, myK, i){
   ret <- getTrainingTestCrossValidation3(training, k_fold)
   trains <- ret[[1]]
   tests <- ret[[2]]
@@ -226,6 +227,7 @@ innerCrossValidation <- function(training, k_fold, myK){
     total_res[[l]] <- mean(as.numeric(res_k), na.rm = TRUE)
     l<-l+1
   }
+  plotMyResults(myK,total_res,i)
   return(as.numeric(myK[which.max(total_res)]))
 }
 
@@ -236,8 +238,8 @@ parallelExternalCrossValidationWithInnerOptimization <- function(data, myK, k_fo
   tests <- ret[[2]]
   no_cores <- detectCores() -1
   cl <- makeCluster(no_cores)
-  clusterExport(cl, list("path", "myK", "getPrecisionFromCM", "innerCrossValidation","getTrainingTestCrossValidation3", "createFolds", "myKnnWithCpp", "sourceCpp", "getAccuracyFromCM"))
-  res_k <- parLapply(cl, 1:k_fold, function(x) c(innerCrossValidation(trainings[[x]], k_fold, myK)))
+  clusterExport(cl, list("path", "myK", "plotMyResults", "getPrecisionFromCM", "innerCrossValidation","getTrainingTestCrossValidation3", "createFolds", "myKnnWithCpp", "sourceCpp", "getAccuracyFromCM"))
+  res_k <- parLapply(cl, 1:k_fold, function(x) c(innerCrossValidation(trainings[[x]], k_fold, myK, x)))
   fileConn<-paste(path,"/output2.txt", sep = "")
   lapply((unlist(lapply(res_k, paste, collapse=" "))), cat, file=fileConn, append=TRUE,sep="\n")
   final_res <- parLapply(cl, 1:k_fold, function(x) c(myKnnWithCpp(trainings[[x]], tests[[x]], res_k[[x]])))
@@ -245,4 +247,15 @@ parallelExternalCrossValidationWithInnerOptimization <- function(data, myK, k_fo
   lapply(unlist(lapply(final_res, paste, collapse=" ")), cat, file=fileConn, append=TRUE, sep="\n")
   stopCluster(cl)
   return(mean(as.numeric(final_res)))
+}
+
+# plotting data
+plotMyResults <- function(x, y, name){
+  png(filename = paste(name,".png", sep = ""), res = 100, height = length(y)*25, width = length(x)*25*2)
+  plot(x = x, y = y, type="o", xaxt = "n", yaxt="n",  xlab = "K", 
+       ylab = "test_error")
+  points(x = x, y = y, col = "dark red")
+  axis(tck=-0.08, cex.axis=0.7, at = x, side = 1)
+  axis(tck=-0.08, side = 2, cex.axis=0.7)
+  dev.off()
 }
