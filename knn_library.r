@@ -196,7 +196,7 @@ externalCrossValidationWithInnerOptimization<-function(data, myK, k_fold){
       total_res[[l]] <- mean(as.numeric(res_k), na.rm = TRUE)
       l<-l+1
     }
-    plotMyResults(myK,total_res, paste("fold_",toString(i), sep=""))
+    plotMyResults(myK, getTestErrorFromAccuracy(total_res), paste("fold_",toString(i), sep=""))
     sel_k <- as.numeric(myK[which.max(total_res)])
     max_k[[i]]<-sel_k
     confusionMatrix <- myKnnWithCpp(curr_train, curr_test, sel_k)
@@ -227,7 +227,7 @@ innerCrossValidation <- function(training, k_fold, myK, i){
     total_res[[l]] <- mean(as.numeric(res_k), na.rm = TRUE)
     l<-l+1
   }
-  plotMyResults(myK,total_res,i)
+  plotMyResults(myK, getTestErrorFromAccuracy(total_res), paste("fold_", toString(i), sep=""))
   return(as.numeric(myK[which.max(total_res)]))
 }
 
@@ -238,7 +238,7 @@ parallelExternalCrossValidationWithInnerOptimization <- function(data, myK, k_fo
   tests <- ret[[2]]
   no_cores <- detectCores() -1
   cl <- makeCluster(no_cores)
-  clusterExport(cl, list("path", "myK", "plotMyResults", "getPrecisionFromCM", "innerCrossValidation","getTrainingTestCrossValidation3", "createFolds", "myKnnWithCpp", "sourceCpp", "getAccuracyFromCM"))
+  clusterExport(cl, list("path", "myK", "getTestErrorFromAccuracy", "plotMyResults", "getPrecisionFromCM", "innerCrossValidation","getTrainingTestCrossValidation3", "createFolds", "myKnnWithCpp", "sourceCpp", "getAccuracyFromCM"))
   res_k <- parLapply(cl, 1:k_fold, function(x) c(innerCrossValidation(trainings[[x]], k_fold, myK, x)))
   fileConn<-paste(path,"/output2.txt", sep = "")
   lapply((unlist(lapply(res_k, paste, collapse=" "))), cat, file=fileConn, append=TRUE,sep="\n")
@@ -258,4 +258,14 @@ plotMyResults <- function(x, y, name){
   axis(tck=-0.08, cex.axis=0.7, at = x, side = 1)
   axis(tck=-0.08, side = 2, cex.axis=0.7)
   dev.off()
+}
+
+# get test error from accuracy
+getTestErrorFromAccuracy<- function(accuracy){
+  size <- length(accuracy)
+  test_error <- list(size)
+  for(i in 1:size){
+    test_error[[i]]<-1-accuracy[[i]]
+  }
+  return(test_error)
 }
