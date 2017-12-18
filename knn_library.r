@@ -339,6 +339,7 @@ parallelExternalCrossValidationWithInnerOptimizationSeq <- function(data, myK, k
                          "myKnnWithCppSeq", "sourceCpp", "getAccuracyFromCM", "sequentialKnn"))
   res_k <- parLapply(cl, 1:k_fold, function(x) c(innerCrossValidationSeq(trainings[[x]], k_fold, myK, x)))
   fileConn<-paste(path,"/output2.txt", sep = "")
+  print("I'm here")
   lapply((unlist(lapply(res_k, paste, collapse=" "))), cat, file=fileConn, append=TRUE,sep="\n")
   stopCluster(cl)
   return(mean(as.numeric(final_res)))
