@@ -2,7 +2,7 @@ source("/home/kai/Documents/Unimi/MetodiStatisticiApp/k_nearest_neighbors/knn_li
 
 file <- paste(path,"/parsed.csv",sep="")
 csv_readed <- read.csv(file=file)
-csv_readed <- csv_readed[1:1000,]
+csv_readed <- csv_readed[1:5000,]
 myK <- c(3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25)
 set.seed(1)
 S <- matrix(nrow=0, ncol=15)
