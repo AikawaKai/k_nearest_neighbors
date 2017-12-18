@@ -249,6 +249,27 @@ parallelExternalCrossValidationWithInnerOptimization <- function(data, myK, k_fo
   return(mean(as.numeric(final_res)))
 }
 
+selectBestKByCrossValidation <- function(data, myK, k_fold){
+  no_cores <- detectCores() -1
+  cl <- makeCluster(no_cores)
+  clusterExport(cl, list("path", "myK", "getTestErrorFromAccuracy", "plotMyResults", "getPrecisionFromCM", "innerCrossValidation","getTrainingTestCrossValidation3", "createFolds", "myKnnWithCpp", "sourceCpp", "getAccuracyFromCM"))
+  ret <- getTrainingTestCrossValidation3(data, k_fold)
+  trainings <- ret[[1]]
+  tests <- ret[[2]]
+  l <- 1
+  res_k <- list(length(myK))
+  for(i in 1:length(myK)){
+    res_k_i <- parLapply(cl, 1:k_fold, function(x) c(myKnnWithCpp(trainings[[x]], tests[[x]], myK[[i]])))
+    res_k_i <- lapply(res_k_i, getAccuracyFromCM)
+    res_k[[i]] <- mean(as.numeric(res_k_i))
+  }
+  stopCluster(cl)
+  bestk<-myK[as.numeric(which.max(res_k))]
+  test_error <- getTestErrorFromAccuracy(res_k)
+  plotMyResults(myK, test_error, "final")
+  return(bestk)
+}
+
 # plotting data
 plotMyResults <- function(x, y, name){
   png(filename = paste(name,".png", sep = ""), res = 100, height = length(y)*25, width = length(x)*25*2)
