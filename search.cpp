@@ -16,10 +16,6 @@ int classify(NumericMatrix training, std::multimap<double,int> res, int k){
   int count_1 = 0;
   int count_2 = 0;
   NumericVector nearestClasses = NumericVector(k);
-  if(training.rows()<k){
-    NumericVector nearestClasses = NumericVector(training.rows());
-    k = training.rows();
-  }
   for(int j=0;j<k;j++)
   {
     double new_dist = it->first;
