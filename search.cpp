@@ -16,6 +16,10 @@ int classify(NumericMatrix training, std::multimap<double,int> res, int k){
   int count_1 = 0;
   int count_2 = 0;
   NumericVector nearestClasses = NumericVector(k);
+  if(training.rows()<k){
+    NumericVector nearestClasses = NumericVector(training.rows());
+    k = training.rows();
+  }
   for(int j=0;j<k;j++)
   {
     double new_dist = it->first;
@@ -79,6 +83,14 @@ int checkRealClass(int class_, int expected){
 // [[Rcpp::export]]
 int searchCppBy1(NumericMatrix training, NumericVector test_i, int k){
   int numRowTr = training.rows();
+  if(numRowTr==0){
+    int base_class = test_i.operator()(14);
+    if(base_class==1){
+      return 1; //FP
+    }else{
+      return 3; //FN
+    }
+  }
   std::multimap<double, int> orderingMap;
   for (int j=0;j<numRowTr;j++){
     NumericVector train_j = training.row(j);

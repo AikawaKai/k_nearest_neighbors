@@ -294,5 +294,18 @@ getTestErrorFromAccuracy<- function(accuracy){
 
 # sequential knn
 sequentialKnn <-function(data, k){
-  
+  sourceCpp(paste(path,"/search.cpp", sep=""))
+  S <- matrix(nrow=0,ncol = 15)
+  data <- unname(as.matrix(data))
+  countErr <- 0
+  len <- nrow(data)
+  for(i in 1:len){
+    curr_test <- data[i,]
+    res <- searchCppBy1(S, curr_test, k)
+    if(res==1 || res==3){
+      countErr<-countErr+1
+      S <- rbind(S, curr_test)
+    }
+  }
+  return(countErr)
 }
