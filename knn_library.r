@@ -291,3 +291,8 @@ getTestErrorFromAccuracy<- function(accuracy){
   }
   return(test_error)
 }
+
+# sequential knn
+sequentialKnn <-function(data, k){
+  
+}

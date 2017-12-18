@@ -76,6 +76,19 @@ int checkRealClass(int class_, int expected){
       return -1;
   }
 }
+// [[Rcpp::export]]
+int searchCppBy1(NumericMatrix training, NumericVector test_i, int k){
+  int numRowTr = training.rows();
+  std::multimap<double, int> orderingMap;
+  for (int j=0;j<numRowTr;j++){
+    NumericVector train_j = training.row(j);
+    double dist = distance(test_i, train_j);
+    orderingMap.insert(std::pair<double,int>(dist,j));
+  }
+  int class_ = classify(training, orderingMap, k);
+  int check = checkRealClass(class_, test_i.operator()(14));
+  return check;
+}
 
 // [[Rcpp::export]]
 NumericVector searchCpp(NumericMatrix training, NumericMatrix test, int k) {
@@ -96,15 +109,10 @@ NumericVector searchCpp(NumericMatrix training, NumericMatrix test, int k) {
   for (int i=0;i<numRowTe;i++)
   {
     NumericVector test_i = test.row(i);
-    std::multimap<double, int> orderingMap;
-    for (int j=0;j<numRowTr;j++){
-      NumericVector train_j = training.row(j);
-      double dist = distance(test_i, train_j);
-      orderingMap.insert(std::pair<double,int>(dist,j));
-    }
-    int class_ = classify(training, orderingMap, k);
-    int check = checkRealClass(class_, test_i.operator()(14));
+    int check = searchCppBy1(training, test_i, k);
     confusionMatrix.operator()(check) = confusionMatrix.operator()(check)+1;
   }
   return confusionMatrix;
 }
+
+
