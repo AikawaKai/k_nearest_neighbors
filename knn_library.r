@@ -249,6 +249,7 @@ parallelExternalCrossValidationWithInnerOptimization <- function(data, myK, k_fo
   return(mean(as.numeric(final_res)))
 }
 
+# select k for the final model
 selectBestKByCrossValidation <- function(data, myK, k_fold){
   no_cores <- detectCores() -1
   cl <- makeCluster(no_cores)
