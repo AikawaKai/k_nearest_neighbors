@@ -124,8 +124,7 @@ myKnnWithCppSeq <- function(training, test, k){
   train_err <- myRes[[1]] # to plot
   S<-myRes[[2]]
   myResTest <- myKnnWithCpp(S, test, k)
-  acc<-getAccuracyFromCM(myResTest)
-  return(acc)
+  return(myResTest)
 }
 
 # basic split for crossvalidation 3
@@ -235,8 +234,6 @@ innerCrossValidation <- function(training, k_fold, myK, i){
       acc <- getAccuracyFromCM(confusionMatrix)
       res_k[[j]] <- acc
     }
-    fileConn<-paste(path,"/output2.txt", sep = "")
-    lapply((unlist(lapply(res_k, paste, collapse=" "))), cat, file=fileConn, append=TRUE,sep="\n")
     total_res[[l]] <- mean(as.numeric(res_k), na.rm = TRUE)
     l<-l+1
   }
@@ -254,14 +251,15 @@ innerCrossValidationSeq <- function(training, k_fold, myK, i){
   for(k in myK){
     res_k <- list(k_fold)
     for(j in 1:k_fold){
-      acc <- myKnnWithCppSeq(trains[[j]], tests[[j]], k)
+      confusionMatrix <- myKnnWithCppSeq(trains[[j]], tests[[j]], k)
+      acc <- getAccuracyFromCM(confusionMatrix)
       res_k[[j]] <- acc
     }
     total_res[[l]] <- mean(as.numeric(res_k[[j]]))
     l<-l+1
   }
   test_error <-getTestErrorFromAccuracy(total_res);
-  plotMyResults(myK, test_error, paste("fold_", toString(i), sep=""))
+  plotMyResults(myK, test_error, paste("foldSeq_", toString(i), sep=""))
   return(as.numeric(myK[which.max(total_res)]))
 }
 
@@ -271,22 +269,37 @@ parallelExternalCrossValidationWithInnerOptimization <- function(data, myK, k_fo
   trainings <- ret[[1]]
   tests <- ret[[2]]
   no_cores <- detectCores() -1
-  cl <- makeCluster(no_cores)
+  cl <- makeCluster(no_cores, errfile="./errPar.txt")
   clusterExport(cl, list("path", "myK", "getTestErrorFromAccuracy", "plotMyResults", "getPrecisionFromCM", "innerCrossValidation","getTrainingTestCrossValidation3", "createFolds", "myKnnWithCpp", "sourceCpp", "getAccuracyFromCM"))
   res_k <- parLapply(cl, 1:k_fold, function(x) c(innerCrossValidation(trainings[[x]], k_fold, myK, x)))
-  fileConn<-paste(path,"/output2.txt", sep = "")
-  lapply((unlist(lapply(res_k, paste, collapse=" "))), cat, file=fileConn, append=TRUE,sep="\n")
   final_res <- parLapply(cl, 1:k_fold, function(x) c(myKnnWithCpp(trainings[[x]], tests[[x]], res_k[[x]])))
   final_res <-lapply(final_res, getAccuracyFromCM)
-  lapply(unlist(lapply(final_res, paste, collapse=" ")), cat, file=fileConn, append=TRUE, sep="\n")
   stopCluster(cl)
   return(mean(as.numeric(final_res)))
 }
 
+# parallel implementation for sequential knn performance evaluation
+parallelExternalCrossValidationWithInnerOptimizationSeq <- function(data, myK, k_fold){
+  ret <- getTrainingTestCrossValidation3(data, k_fold)
+  trainings <- ret[[1]]
+  tests <- ret[[2]]
+  no_cores <- detectCores() -1
+  cl <- makeCluster(no_cores, errfile="./errParSeq.txt")
+  clusterExport(cl, list("path", "myK", "getTestErrorFromAccuracy", "plotMyResults", "plotMySeqRisk", "getPrecisionFromCM", 
+                         "innerCrossValidationSeq","getTrainingTestCrossValidation3", "createFolds", 
+                         "myKnnWithCppSeq", "myKnnWithCpp", "sourceCpp", "getAccuracyFromCM", "sequentialKnn"))
+  res_k <- parLapply(cl, 1:k_fold, function(x) c(innerCrossValidationSeq(trainings[[x]], k_fold, myK, x)))
+  final_res <- parLapply(cl, 1:k_fold, function(x) c(myKnnWithCppSeq(trainings[[x]], tests[[x]], res_k[[x]])))
+  final_res <-lapply(final_res, getAccuracyFromCM)
+  stopCluster(cl)
+  return(mean(as.numeric(final_res)))
+}
+
+
 # select k for the final model with parallelization
 selectBestKByCrossValidation <- function(data, myK, k_fold){
   no_cores <- detectCores() -1
-  cl <- makeCluster(no_cores)
+  cl <- makeCluster(no_cores, errfile="./errPar.txt")
   clusterExport(cl, list("path", "myK", "getTestErrorFromAccuracy", "plotMyResults", "getPrecisionFromCM", "innerCrossValidation","getTrainingTestCrossValidation3", "createFolds", "myKnnWithCpp", "sourceCpp", "getAccuracyFromCM"))
   ret <- getTrainingTestCrossValidation3(data, k_fold)
   trainings <- ret[[1]]
@@ -302,6 +315,31 @@ selectBestKByCrossValidation <- function(data, myK, k_fold){
   bestk<-myK[as.numeric(which.max(res_k))]
   test_error <- getTestErrorFromAccuracy(res_k)
   plotMyResults(myK, test_error, "final")
+  return(bestk)
+}
+
+selectBestKByCrossValidationSeq <- function(data, myK, k_fold){
+  no_cores <- detectCores() -1
+  cl <- makeCluster(no_cores, errfile="./errParSeq.txt")
+  clusterExport(cl, list("path", "myK", "getTestErrorFromAccuracy", "plotMyResults", 
+                         "getPrecisionFromCM", "innerCrossValidationSeq",
+                         "getTrainingTestCrossValidation3", "createFolds", 
+                         "myKnnWithCppSeq", "myKnnWithCpp", "sourceCpp", 
+                         "getAccuracyFromCM", "sequentialKnn"))
+  ret <- getTrainingTestCrossValidation3(data, k_fold)
+  trainings <- ret[[1]]
+  tests <- ret[[2]]
+  l <- 1
+  res_k <- list(length(myK))
+  for(i in 1:length(myK)){
+    res_k_i <- parLapply(cl, 1:k_fold, function(x) c(myKnnWithCppSeq(trainings[[x]], tests[[x]], myK[[i]])))
+    res_k_i <- lapply(res_k_i, getAccuracyFromCM)
+    res_k[[i]] <- mean(as.numeric(res_k_i))
+  }
+  stopCluster(cl)
+  bestk<-myK[as.numeric(which.max(res_k))]
+  test_error <- getTestErrorFromAccuracy(res_k)
+  plotMyResults(myK, test_error, "final_seq")
   return(bestk)
 }
 
@@ -332,23 +370,6 @@ getTestErrorFromAccuracy<- function(accuracy){
     test_error[[i]]<-1-accuracy[[i]]
   }
   return(test_error)
-}
-
-# parallel implementation for sequential knn performance evaluation
-parallelExternalCrossValidationWithInnerOptimizationSeq <- function(data, myK, k_fold){
-  ret <- getTrainingTestCrossValidation3(data, k_fold)
-  trainings <- ret[[1]]
-  tests <- ret[[2]]
-  no_cores <- detectCores() -1
-  cl <- makeCluster(no_cores, errfile="debug_core.txt")
-  clusterExport(cl, list("path", "myK", "getTestErrorFromAccuracy", "plotMyResults", "plotMySeqRisk", "getPrecisionFromCM", 
-                         "innerCrossValidationSeq","getTrainingTestCrossValidation3", "createFolds", 
-                         "myKnnWithCppSeq", "myKnnWithCpp", "sourceCpp", "getAccuracyFromCM", "sequentialKnn"))
-  res_k <- parLapply(cl, 1:k_fold, function(x) c(innerCrossValidationSeq(trainings[[x]], k_fold, myK, x)))
-  fileConn<-paste(path,"/debug.txt", sep = "")
-  lapply((unlist(lapply(res_k, paste, collapse=" "))), cat, file=fileConn, append=TRUE,sep="\n")
-  stopCluster(cl)
-  return(res_k)
 }
 
 # sequential knn
