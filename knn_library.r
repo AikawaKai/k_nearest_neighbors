@@ -120,7 +120,7 @@ myKnnWithCppSeq <- function(training, test, k){
   sourceCpp(paste(path,"/search.cpp", sep=""))
   train <- as.matrix(training)
   test <- as.matrix(test)
-  myRes <- sequentialKnn(S=matrix(nrow = 0, ncol=15), train, k)
+  myRes <- sequentialKnn(S=matrix(nrow = 0, ncol=15), train, k) #training
   train_err <- myRes[[1]] # to plot
   S<-myRes[[2]]
   myResTest <- myKnnWithCpp(S, test, k)
@@ -283,7 +283,7 @@ parallelExternalCrossValidationWithInnerOptimization <- function(data, myK, k_fo
   return(mean(as.numeric(final_res)))
 }
 
-# select k for the final model
+# select k for the final model with parallelization
 selectBestKByCrossValidation <- function(data, myK, k_fold){
   no_cores <- detectCores() -1
   cl <- makeCluster(no_cores)
@@ -311,8 +311,8 @@ plotMyResults <- function(x, y, name){
   plot(x = x, y = y, type="o", xaxt = "n", yaxt="n",  xlab = "K", 
        ylab = "test_error")
   points(x = x, y = y, col = "dark red")
-  axis(tck=-0.08, cex.axis=0.7, at = x, side = 1)
-  axis(tck=-0.08, side = 2, cex.axis=0.7)
+  axis(tck=-0.03, cex.axis=0.7, at = x, side = 1)
+  axis(tck=-0.03, side = 2, cex.axis=0.7)
   dev.off()
 }
 
@@ -353,7 +353,6 @@ parallelExternalCrossValidationWithInnerOptimizationSeq <- function(data, myK, k
 
 # sequential knn
 sequentialKnn <-function(S, data,  k){
-  fileConn<-paste(path,"/debug.txt", sep = "")
   sourceCpp(paste(path,"/search.cpp", sep=""))
   listSeqError<-list(nrow(data))
   data <- unname(as.matrix(data))
@@ -363,11 +362,10 @@ sequentialKnn <-function(S, data,  k){
     curr_test <- data[i,]
     S <- rbind(S, curr_test)
     listSeqError[[i]] <- count/i
-    cat(listSeqError[[i]], file = fileConn, sep="\n", append = "TRUE")
   }
   countErr <- k
   len <- nrow(data)
-  for(i in seq(k, len, by=1)){
+  for(i in seq(k+1, len, by=1)){
     curr_test <- data[i,]
     res <- searchCppBy1(S, curr_test, k)
     if(res==1 || res==3){
@@ -376,6 +374,5 @@ sequentialKnn <-function(S, data,  k){
     }
     listSeqError[[i]] <- countErr/i;
   }
-  print(nrow(S))
   return(list(listSeqError,S))
 }
