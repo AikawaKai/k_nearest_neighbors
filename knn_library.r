@@ -358,7 +358,7 @@ plotMyResults <- function(x, y, name){
 plotMySeqRisk <- function(x, y, name){
   png(filename = paste(name,".png", sep = ""), height = 500, width = 700)
   plot(x = x, y = y,  xlab = "num_example", 
-       ylab = "test_error", type = "l")
+       ylab = "seq_risk", type = "l")
   dev.off()
 }
 
@@ -376,6 +376,7 @@ getTestErrorFromAccuracy<- function(accuracy){
 sequentialKnn <-function(S, data,  k){
   sourceCpp(paste(path,"/search.cpp", sep=""))
   listSeqError<-list(nrow(data))
+  countMisclassified <- list(length(data))
   data <- unname(as.matrix(data))
   count <- 0
   for(i in 1:k){
@@ -383,6 +384,7 @@ sequentialKnn <-function(S, data,  k){
     curr_test <- data[i,]
     S <- rbind(S, curr_test)
     listSeqError[[i]] <- count/i
+    countMisclassified[[i]] <- count
   }
   countErr <- k
   len <- nrow(data)
@@ -394,6 +396,7 @@ sequentialKnn <-function(S, data,  k){
       S <- rbind(S, curr_test)
     }
     listSeqError[[i]] <- countErr/i;
+    countMisclassified[[i]] <- countErr
   }
-  return(list(listSeqError,S))
+  return(list(listSeqError,S, countMisclassified))
 }
