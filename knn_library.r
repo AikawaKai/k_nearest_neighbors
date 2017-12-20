@@ -362,6 +362,14 @@ plotMySeqRisk <- function(x, y, name){
   dev.off()
 }
 
+# plot seq risk
+plotMyMisclassified <- function(x, y, name){
+  png(filename = paste(name,".png", sep = ""), height = 500, width = 700)
+  plot(x = x, y = y,  xlab = "num_example", 
+       ylab = "misclassified", type = "l")
+  dev.off()
+}
+
 # get test error from accuracy
 getTestErrorFromAccuracy<- function(accuracy){
   size <- length(accuracy)
