@@ -21,7 +21,8 @@ int classify(NumericMatrix training, std::multimap<double,int> res, int k){
     double new_dist = it->first;
     int index = it->second;
     NumericVector train_j = training.row(index);
-    int class_train = train_j.operator()(14);
+    int class_index = train_j.size()-1;
+    int class_train = train_j.operator()(class_index);
     nearestClasses(j) = class_train;
     if(class_train==1){
       count_1=count_1+1;
@@ -79,8 +80,9 @@ int checkRealClass(int class_, int expected){
 // [[Rcpp::export]]
 int searchCppBy1(NumericMatrix training, NumericVector test_i, int k){
   int numRowTr = training.rows();
+  int class_index = test_i.size()-1;
   if(numRowTr==0){
-    int base_class = test_i.operator()(14);
+    int base_class = test_i.operator()(class_index);
     if(base_class==1){
       return 1; //FP
     }else{
@@ -94,7 +96,7 @@ int searchCppBy1(NumericMatrix training, NumericVector test_i, int k){
     orderingMap.insert(std::pair<double,int>(dist,j));
   }
   int class_ = classify(training, orderingMap, k);
-  int check = checkRealClass(class_, test_i.operator()(14));
+  int check = checkRealClass(class_, test_i.operator()(class_index));
   return check;
 }
 
@@ -113,7 +115,6 @@ NumericVector searchCpp(NumericMatrix training, NumericMatrix test, int k) {
   /*std::cout<<numRowTr;
   std::cout<<"\n";
   std::cout<<numColTr;*/
-  NumericVector AllDistances = NumericVector(numRowTe);
   for (int i=0;i<numRowTe;i++)
   {
     NumericVector test_i = test.row(i);

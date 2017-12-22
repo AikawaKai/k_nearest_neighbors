@@ -49,6 +49,14 @@ checkTpFpTnFn<-function(res, expected){
   }
 }
 
+doPcaAndSelection <- function(data, num_feat){
+  classes <- data[,15]
+  data <- prcomp(data[,1:14], center = TRUE, scale. = TRUE)
+  data <- data$x[,1:num_feat]
+  data <- cbind(data, classes)
+  return(data)
+}
+
 # slow implementation
 myKnn <- function(training, test, k){
   myconfusionMatrix <- c(0, 0, 0, 0)
@@ -264,7 +272,10 @@ innerCrossValidationSeq <- function(training, k_fold, myK, i){
 }
 
 # parallel implementation for cross validation with inner optimization
-parallelExternalCrossValidationWithInnerOptimization <- function(data, myK, k_fold){
+parallelExternalCrossValidationWithInnerOptimization <- function(data, myK, k_fold, pca, num_feat){
+  if(pca){
+    data <- doPcaAndSelection(data, num_feat)
+  }
   ret <- getTrainingTestCrossValidation3(data, k_fold)
   trainings <- ret[[1]]
   tests <- ret[[2]]
@@ -286,7 +297,10 @@ parallelExternalCrossValidationWithInnerOptimization <- function(data, myK, k_fo
 }
 
 # parallel implementation for sequential knn performance evaluation
-parallelExternalCrossValidationWithInnerOptimizationSeq <- function(data, myK, k_fold){
+parallelExternalCrossValidationWithInnerOptimizationSeq <- function(data, myK, k_fold, pca, num_feat){
+  if(pca){
+    data <- doPcaAndSelection(data, num_feat)
+  }
   ret <- getTrainingTestCrossValidation3(data, k_fold)
   trainings <- ret[[1]]
   tests <- ret[[2]]
@@ -311,10 +325,13 @@ parallelExternalCrossValidationWithInnerOptimizationSeq <- function(data, myK, k
 
 
 # select k for the final model with parallelization
-selectBestKByCrossValidation <- function(data, myK, k_fold){
+selectBestKByCrossValidation <- function(data, myK, k_fold, pca, num_feat){
   no_cores <- detectCores() -1
   cl <- makeCluster(no_cores, errfile="./errPar.txt")
   clusterExport(cl, list("path", "myK", "getTestErrorFromAccuracy", "plotMyResults", "getPrecisionFromCM", "innerCrossValidation","getTrainingTestCrossValidation3", "createFolds", "myKnnWithCpp", "sourceCpp", "getAccuracyFromCM"))
+  if(pca){
+    data <- doPcaAndSelection(data, num_feat)
+  }
   ret <- getTrainingTestCrossValidation3(data, k_fold)
   trainings <- ret[[1]]
   tests <- ret[[2]]
@@ -332,7 +349,7 @@ selectBestKByCrossValidation <- function(data, myK, k_fold){
   return(bestk)
 }
 
-selectBestKByCrossValidationSeq <- function(data, myK, k_fold){
+selectBestKByCrossValidationSeq <- function(data, myK, k_fold, pca, num_feat){
   no_cores <- detectCores() -1
   cl <- makeCluster(no_cores, errfile="./errParSeq.txt")
   clusterExport(cl, list("path", "myK", "getTestErrorFromAccuracy", "plotMyResults", 
@@ -340,6 +357,9 @@ selectBestKByCrossValidationSeq <- function(data, myK, k_fold){
                          "getTrainingTestCrossValidation3", "createFolds", 
                          "myKnnWithCppSeq", "myKnnWithCpp", "sourceCpp", 
                          "getAccuracyFromCM", "sequentialKnn"))
+  if(pca){
+    data <- doPcaAndSelection(data, num_feat)
+  }
   ret <- getTrainingTestCrossValidation3(data, k_fold)
   trainings <- ret[[1]]
   tests <- ret[[2]]
@@ -395,7 +415,10 @@ getTestErrorFromAccuracy<- function(accuracy){
 }
 
 # sequential knn
-sequentialKnn <-function(S, data,  k){
+sequentialKnn <-function(S, data,  k, pca=FALSE, num_feat){
+  if(pca){
+    data <- doPcaAndSelection(data, num_feat)
+  }
   sourceCpp(paste(path,"/search.cpp", sep=""))
   listSeqError<-list(nrow(data))
   countMisclassified <- list(length(data))
