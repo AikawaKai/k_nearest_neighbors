@@ -290,9 +290,13 @@ parallelExternalCrossValidationWithInnerOptimizationSeq <- function(data, myK, k
                          "myKnnWithCppSeq", "myKnnWithCpp", "sourceCpp", "getAccuracyFromCM", "sequentialKnn"))
   res_k <- parLapply(cl, 1:k_fold, function(x) c(innerCrossValidationSeq(trainings[[x]], k_fold, myK, x)))
   final_res <- parLapply(cl, 1:k_fold, function(x) c(myKnnWithCppSeq(trainings[[x]], tests[[x]], res_k[[x]])))
-  final_res <-lapply(final_res, getAccuracyFromCM)
+  accuracy_vals <-lapply(final_res, getAccuracyFromCM)
+  precision1 <-lapply(final_res, function (x) c(getPrecisionFromCM(x, 1)))
+  precision2 <-lapply(final_res, function (x) c(getPrecisionFromCM(x, 2)))
   stopCluster(cl)
-  return(mean(as.numeric(final_res)))
+  print(mean(as.numeric(precision1)))
+  print(mean(as.numeric(precision2)))
+  return(mean(as.numeric(accuracy_vals)))
 }
 
 

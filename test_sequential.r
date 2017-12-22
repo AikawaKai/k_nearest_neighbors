@@ -2,10 +2,10 @@ source("/home/kai/Documents/Unimi/MetodiStatisticiApp/k_nearest_neighbors/knn_li
 
 file <- paste(path,"/parsed.csv",sep="")
 csv_readed <- read.csv(file=file)
-csv_readed <- csv_readed[1:200,]
+csv_readed <- csv_readed[1:10000,]
+set.seed(100)
 csv_readed <- csv_readed[sample(nrow(csv_readed)),]
-myK <- seq(1, 103, by=2)
-set.seed(1)
+myK <- seq(1, 21, by=2)
 S <- matrix(nrow=0, ncol=15)
 #system.time(err<-sequentialKnn(S, csv_readed, 7))
 system.time(res2 <- parallelExternalCrossValidationWithInnerOptimizationSeq(csv_readed, myK, 5))
