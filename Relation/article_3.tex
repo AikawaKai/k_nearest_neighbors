@@ -82,69 +82,56 @@
 %	ARTICLE CONTENTS
 %----------------------------------------------------------------------------------------
 
-\section*{Introduction} % The \section*{} command stops section numbering
+\section*{Introduzione} % The \section*{} command stops section numbering
 
 \addcontentsline{toc}{section}{Introduction} % Adds this section to the table of contents
 
-Si è scelto di implementare in R l'algoritmo K-NN e di applicarlo ad un problema di classificazione binario, dove si vuole associare ad una persona il suo possibile reddito annuale, date alcune sue informazioni di base. 
+Si è scelto di implementare in R l'algoritmo K-NN e di applicarlo ad un problema di classificazione binario, dove si vuole associare ad una persona il suo possibile reddito annuale (discretizzato tramite una soglia, a due valori possibili), date alcune sue informazioni di base. 
 
 \subsection{Il dataset}
 Il dataset utilizzato \cite{Lichman:2013} contiene 48842 istanze, ognuna delle quali è caratterizzata da 14 feature:
 
 \begin{itemize}
-\item Età - Tipo continuo
-\item Workclass - Tipo nominale (8 valori possibili)
-\item Fnlwgt - Tipo continuo
-\item Education - Tipo nominale (16 valori possibili)
-\item Education-num - Tipo continuo (trasformazione di education in tipo continuo)
-
+\footnotesize{
+\item \textbf{Età} - Tipo continuo
+\item \textbf{Workclass} - Tipo nominale (8 valori possibili)
+\item \textbf{Fnlwgt} - Tipo continuo
+\item \textbf{Education} - Tipo nominale (16 valori possibili)
+\item \textbf{Education-num} - Tipo continuo (trasformazione di education in tipo continuo)
+\item \textbf{Marital-status} - Tipo nominale (7 valori possibili)
+\item \textbf{Occupation} - Tipo nominale (14 valori possibili)
+\item \textbf{Relationship} - Tipo nominale (6 valori possibili)
+\item \textbf{Race} - Tipo nominale (6 valori possibili)
+\item \textbf{Sex} - Tipo nominale (2 valori possibili)
+\item \textbf{Capital-gain} - Tipo continuo 
+\item \textbf{Capital-loss} - Tipo continuo
+\item \textbf{Hours-per-week} - Tipo continuo
+\item \textbf{Native-country} - Tipo nominale (41 valori possibili)}
 \end{itemize}
+Per rendere l'input gestibile da K-NN si sono trasformate le feature di tipo nominale in tipo continuo, cosa che è stata già fatta nel dataset con la feature \emph{Education}, che è stata trasformata nella feature continua \emph{Education-num}.
+\newline
+Per quanto riguarda l'etichettatura, ognuna delle istanze può assumere due possibili valori, e cioè
+\begin{itemize}
+\item $>=50k$
+\item $<50k$
+\end{itemize} 
+
+\subsection{Ottimizzazione delle performance}
+Data la lentezza dell'algoritmo K-NN, soprattutto con grandi dataset, si è deciso di implementare la funzione di ricerca per i k più vicini in C++, che rispetto ad R risulta molto più veloce. Per quanto riguarda il task di \emph{cross-validation} invece, si è deciso di parallelizzarlo grazie ad una funzione fornita da una libreria di R\footnote{\emph{parLapply}, nella libreria di R \emph{parallel}.}, che ha permesso di suddividere agevolmente il problema.
+
+
 
 %------------------------------------------------
 
-\section{Methods}
+\section{Metodi}
 
-\begin{figure*}[ht]\centering % Using \begin{figure*} makes the figure take up the entire width of the page
-\includegraphics[width=\linewidth]{view}
-\caption{Wide Picture}
-\label{fig:view}
-\end{figure*}
+Per il problema trattato si sono utilizzate due versioni di K-NN, e cioè quella classica e quella online.
 
-\lipsum[4] % Dummy text
+\subsection{K-NN}
+TO DO K-NN
 
-\begin{equation}
-\cos^3 \theta =\frac{1}{4}\cos\theta+\frac{3}{4}\cos 3\theta
-\label{eq:refname2}
-\end{equation}
-
-\lipsum[5] % Dummy text
-
-\begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
-\item First item in a list
-\item Second item in a list
-\item Third item in a list
-\end{enumerate}
-
-\subsection{Subsection}
-
-\lipsum[6] % Dummy text
-
-\paragraph{Paragraph} \lipsum[7] % Dummy text
-\paragraph{Paragraph} \lipsum[8] % Dummy text
-
-\subsection{Subsection}
-
-\lipsum[9] % Dummy text
-
-\begin{figure}[ht]\centering
-\includegraphics[width=\linewidth]{results}
-\caption{In-text Picture}
-\label{fig:results}
-\end{figure}
-
-Reference to Figure \ref{fig:results}.
-
-%------------------------------------------------
+\subsection{K-NN online}
+TO DO K-NN ONLINE
 
 \section{Results and Discussion}
 
