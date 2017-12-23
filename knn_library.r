@@ -216,7 +216,7 @@ externalCrossValidationWithInnerOptimization<-function(data, myK, k_fold){
       total_res[[l]] <- mean(as.numeric(res_k), na.rm = TRUE)
       l<-l+1
     }
-    plotMyResults(myK, getTestErrorFromAccuracy(total_res), paste("fold_",toString(i), sep=""))
+    plotMyResults(myK, getTestErrorFromAccuracy(total_res), paste("./fold_",toString(i), sep=""))
     sel_k <- as.numeric(myK[which.max(total_res)])
     max_k[[i]]<-sel_k
     confusionMatrix <- myKnnWithCpp(curr_train, curr_test, sel_k)
@@ -245,7 +245,7 @@ innerCrossValidation <- function(training, k_fold, myK, i){
     total_res[[l]] <- mean(as.numeric(res_k), na.rm = TRUE)
     l<-l+1
   }
-  plotMyResults(myK, getTestErrorFromAccuracy(total_res), paste("fold_", toString(i), sep=""))
+  plotMyResults(myK, getTestErrorFromAccuracy(total_res), paste("./fold_", toString(i), sep=""))
   return(as.numeric(myK[which.max(total_res)]))
 }
 
@@ -267,7 +267,7 @@ innerCrossValidationSeq <- function(training, k_fold, myK, i){
     l<-l+1
   }
   test_error <-getTestErrorFromAccuracy(total_res);
-  plotMyResults(myK, test_error, paste("foldSeq_", toString(i), sep=""))
+  plotMyResults(myK, test_error, paste("./foldSeq_", toString(i), sep=""))
   return(as.numeric(myK[which.max(total_res)]))
 }
 
@@ -345,7 +345,7 @@ selectBestKByCrossValidation <- function(data, myK, k_fold, pca, num_feat){
   stopCluster(cl)
   bestk<-myK[as.numeric(which.max(res_k))]
   test_error <- getTestErrorFromAccuracy(res_k)
-  plotMyResults(myK, test_error, "final")
+  plotMyResults(myK, test_error, "./final")
   return(bestk)
 }
 
@@ -373,7 +373,7 @@ selectBestKByCrossValidationSeq <- function(data, myK, k_fold, pca, num_feat){
   stopCluster(cl)
   bestk<-myK[as.numeric(which.max(res_k))]
   test_error <- getTestErrorFromAccuracy(res_k)
-  plotMyResults(myK, test_error, "final_seq")
+  plotMyResults(myK, test_error, "./final_seq")
   return(bestk)
 }
 

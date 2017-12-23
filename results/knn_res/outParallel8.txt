@@ -1,0 +1,13 @@
+[1] "Precision class1: "
+[1] 0.800022
+[1] "Precision class2: "
+[1] 0.8036302
+
+     user    system   elapsed 
+    1.712     0.372 53114.135 
+[1] "Expected accuracy with k selection: "
+[1] 0.8002535
+     user    system   elapsed 
+   19.804     4.296 12760.265 
+[1] "Best final k selected: "
+[1] 29
