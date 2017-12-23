@@ -1,0 +1,9 @@
+\begin{thebibliography}{1}
+
+\bibitem{Lichman:2013}
+M.~Lichman.
+\newblock {UCI} machine learning repository.
+\newblock 2013.
+\newblock \url{https://archive.ics.uci.edu/ml/datasets/adult}
+
+\end{thebibliography}

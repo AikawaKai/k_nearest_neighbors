@@ -22,8 +22,6 @@
 
 \documentclass[fleqn,10pt]{SelfArx} % Document font size and equations flushed left
 
-\usepackage[english]{babel} % Specify a different language here - english by default
-
 \usepackage{lipsum} % Required to insert dummy text. To be removed otherwise
 
 %----------------------------------------------------------------------------------------
@@ -54,12 +52,10 @@
 \JournalInfo{Journal, Vol. XXI, No. 1, 1-5, 2013} % Journal information
 \Archive{Additional note} % Additional notes (e.g. copyright, DOI, review/research article)
 
-\PaperTitle{Article Title} % Article title
 
-\Authors{John Smith\textsuperscript{1}*, James Smith\textsuperscript{2}} % Authors
-\affiliation{\textsuperscript{1}\textit{Department of Biology, University of Examples, London, United Kingdom}} % Author affiliation
-\affiliation{\textsuperscript{2}\textit{Department of Chemistry, University of Examples, London, United Kingdom}} % Author affiliation
-\affiliation{*\textbf{Corresponding author}: john@smith.com} % Corresponding author
+\PaperTitle{\center Progetto di Metodi statistici per l'apprendimento: K-Nearest Neighbors} % Article title
+\Authors{\center \textbf{Studente:} Marco Odore - \textbf{Matricola:} 868906}
+ % Authors
 
 \Keywords{Keyword1 --- Keyword2 --- Keyword3} % Keywords - if you don't want any simply remove all the text between the curly brackets
 \newcommand{\keywordname}{Keywords} % Defines the keywords heading name
@@ -68,7 +64,7 @@
 %	ABSTRACT
 %----------------------------------------------------------------------------------------
 
-\Abstract{\lipsum[1]~}
+\Abstract{Implementzione in R e C++ dell'algoritmo K-nearest neighbors e sua applicazione ad un problema di classificazione binaria, nella sua versione classica e online.}
 
 %----------------------------------------------------------------------------------------
 
@@ -90,8 +86,19 @@
 
 \addcontentsline{toc}{section}{Introduction} % Adds this section to the table of contents
 
-\lipsum[1-3] % Dummy text
- and some mathematics $\cos\pi=-1$ and $\alpha$ in the text\footnote{And some mathematics $\cos\pi=-1$ and $\alpha$ in the text.}.
+Si è scelto di implementare in R l'algoritmo K-NN e di applicarlo ad un problema di classificazione binario, dove si vuole associare ad una persona il suo possibile reddito annuale, date alcune sue informazioni di base. 
+
+\subsection{Il dataset}
+Il dataset utilizzato \cite{Lichman:2013} contiene 48842 istanze, ognuna delle quali è caratterizzata da 14 feature:
+
+\begin{itemize}
+\item Età - Tipo continuo
+\item Workclass - Tipo nominale (8 valori possibili)
+\item Fnlwgt - Tipo continuo
+\item Education - Tipo nominale (16 valori possibili)
+\item Education-num - Tipo continuo (trasformazione di education in tipo continuo)
+
+\end{itemize}
 
 %------------------------------------------------
 
@@ -197,14 +204,15 @@ Richard & Miles & $2$ \\
 
 \addcontentsline{toc}{section}{Acknowledgments} % Adds this section to the table of contents
 
-So long and thanks for all the fish \cite{Figueredo:2009dg}.
 
 %----------------------------------------------------------------------------------------
 %	REFERENCE LIST
 %----------------------------------------------------------------------------------------
 \phantomsection
+\bibliography{article_3}
 \bibliographystyle{unsrt}
-\bibliography{sample}
+
+
 
 %----------------------------------------------------------------------------------------
 
