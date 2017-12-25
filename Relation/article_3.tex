@@ -108,7 +108,7 @@ Il dataset utilizzato \cite{Lichman:2013} contiene 48842 istanze, ognuna delle q
 \item \textbf{Hours-per-week} - Tipo continuo
 \item \textbf{Native-country} - Tipo nominale (41 valori possibili)}
 \end{itemize}
-Per rendere l'input gestibile da K-NN si sono trasformate le feature di tipo nominale in tipo continuo, cosa che è stata già fatta nel dataset con la feature \emph{Education}, che è stata trasformata nella feature continua \emph{Education-num}.
+Per rendere l'input gestibile da K-NN, si sono trasformate le feature di tipo nominale in una serie di feature binarie, e cioè utilizzando delle variabili dummy per ogni possibile valore che la feature può assumere.
 \newline
 Per quanto riguarda l'etichettatura, ognuna delle istanze può assumere due possibili valori, e cioè
 \begin{itemize}
