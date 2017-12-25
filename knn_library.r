@@ -50,8 +50,8 @@ checkTpFpTnFn<-function(res, expected){
 }
 
 doPcaAndSelection <- function(data, num_feat){
-  classes <- data[,15]
-  data <- prcomp(data[,1:14], center = TRUE, scale. = TRUE)
+  classes <- data[,ncol(data)]
+  data <- prcomp(data[,1:ncol(data)-1], center = TRUE, scale. = TRUE)
   data <- data$x[,1:num_feat]
   data <- cbind(data, classes)
   return(data)
@@ -69,7 +69,7 @@ myKnn <- function(training, test, k){
     for(j in 1:nrow(training)){
       d <- calculateDistance(test[i,], training[j,])
       distances <- c(distances, d)
-      classes <- c(classes, training[j,][[15]])
+      classes <- c(classes, training[j,][[ncol(training)]])
     }
     df_res <- data.frame(distances, classes)
     df_res <- df_res[order(df_res$distances),]
@@ -84,9 +84,9 @@ myKnn <- function(training, test, k){
       }
     }
     if(count_1>count_2){
-      res <- checkTpFpTnFn(as.integer(test[i,15]),1)
+      res <- checkTpFpTnFn(as.integer(test[i,ncol(training)]),1)
     }else{
-      res <- checkTpFpTnFn(as.integer(test[i,15]),2)
+      res <- checkTpFpTnFn(as.integer(test[i,ncol(training)]),2)
     }
     myconfusionMatrix[res] <- myconfusionMatrix[res]+1
   }  
@@ -128,7 +128,7 @@ myKnnWithCppSeq <- function(training, test, k){
   sourceCpp(paste(path,"/search.cpp", sep=""))
   train <- as.matrix(training)
   test <- as.matrix(test)
-  myRes <- sequentialKnn(S=matrix(nrow = 0, ncol=15), train, k) #training
+  myRes <- sequentialKnn(S=matrix(nrow = 0, ncol=ncol(training)), train, k) #training
   train_err <- myRes[[1]] # to plot
   S<-myRes[[2]]
   myResTest <- myKnnWithCpp(S, test, k)
