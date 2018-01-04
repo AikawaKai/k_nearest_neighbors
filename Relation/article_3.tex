@@ -23,7 +23,7 @@
 \documentclass[fleqn,10pt]{SelfArx} % Document font size and equations flushed left
 
 \usepackage{lipsum} % Required to insert dummy text. To be removed otherwise
-
+\usepackage{csvsimple}
 %----------------------------------------------------------------------------------------
 %	COLUMNS
 %----------------------------------------------------------------------------------------
@@ -37,7 +37,7 @@
 
 \definecolor{color1}{RGB}{0,0,90} % Color of the article title and sections
 \definecolor{color2}{RGB}{0,20,20} % Color of the boxes behind the abstract and headings
-
+\usepackage[italian]{babel} 
 %----------------------------------------------------------------------------------------
 %	HYPERLINKS
 %----------------------------------------------------------------------------------------
@@ -172,7 +172,73 @@ er_{seq}(t)=\frac{1}{t}\sum_{i=1}^{t} l(y_t,h_{k-NN}(x_t))
 
 ad ogni passo t, e cioè alla t-esima istanza fornita in pasto all'algoritmo.
 \section{Sperimentazione}
+La sperimentazione è stata effettuata sia normalizzando i dati\footnote{\footnotesize{Ogni specificazione delle feature è stata trasformata in una specificazione di una normale standard, sottraendo ad ogni valore la media campionaria e dividendo per la deviazione standard campionaria}}, sia in assenza di normalizzazione, questo per verificare l'impatto che questa procedura ha sulle performance dei classificatori generati.
+\newline
+\newline
+La ricerca del parametro $k$ è invece avvenuta su di un set di 26 possibili valori\footnote{\footnotesize{K=\{1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49, 51\}}}.
 
+\subsection{K-NN senza normalizzazione}
+Le curve del test error al variare di k, valutate tramite cross-validation interna per ogni fold, hanno un andamento molto simile, come si evince dalla figura \ref{cross:int1}.
+\begin{figure}
+\includegraphics[scale=0.27]{knn_wo_norm/fold_1.png}
+\includegraphics[scale=0.27]{knn_wo_norm/fold_2.png}
+\includegraphics[scale=0.27]{knn_wo_norm/fold_3.png}
+\includegraphics[scale=0.27]{knn_wo_norm/fold_4.png}
+\includegraphics[scale=0.27]{knn_wo_norm/fold_5.png}
+\caption{\footnotesize{Test error (della cross validazione interna al fold) al variare di $k$ per ogni singolo fold.}}
+\label{cross:int1}
+\end{figure}
+\newline
+\newline
+Il test error ha infatti il classico comportamento che si può osservare in K-NN, e cioè diminuisce progressivamente fino ad arrivare ad un $k^{*}$ ottimo in cui l'errore è minimo, per poi ritornare a salire nuovamente. I $k^{*}$ ottimi ottenuti risultano essere poi relativamente vicini per ogni fold (così come il test error), come si evince dalla tabella \ref{cross:k1}.
+\newline
+\begin{table}
+\center
+\begin{tabular}{l|l|l|l|l|l}%
+    \bfseries  fold & \bfseries k % specify table head
+    \csvreader[head to column names]{knn_wo_norm/k.csv}{}% use head of csv as column names
+    {\\\hline \csvcoli&\csvcolii}% specify your coloumns here
+    \end{tabular}
+    \caption{\footnotesize{I k ottimi generati per ogni fold}}
+    \label{cross:k1}
+\end{table}
+
+La performance finale del classificatore con selezione automatica del $k^{*}$ ottimo, valutata con cross validazione esterna, si attesta sul $79\% $ di accuratezza. Infine è stato selezionato il k finale del modello, con una nuova cross validation interna, questa volta su tutto il dataset, che è risultato essere pari a 25. L'andamento del test error al variare di k sulla cross-validation interna finale, è mostrata nella figura \ref{cross:final1}. 
+\begin{figure}
+\includegraphics[scale=0.27]{knn_wo_norm/final.png}
+\caption{\footnotesize{Test error al variare di $k$ per la cross validazione interna finale.}}
+\label{cross:final1}
+\end{figure}
+\newline
+\newline
+Nelle tabelle \ref{cross:prec1} e \ref{cross:stats1} vi sono un po' di statistiche dettagliate su questa specifica sperimentazione.
+\begin{table}
+\center
+\begin{tabular}{l|l|l}%
+    \bfseries  class & \bfseries precision % specify table head
+    \csvreader[head to column names]{knn_wo_norm/prec.csv}{}% use head of csv as column names
+    {\\\hline \csvcoli&\csvcolii}% specify your coloumns here
+    \end{tabular}
+    \caption{\footnotesize{La precision finale per le due classi}}
+ 	\label{cross:prec1}
+ \end{table}
+ \begin{table}
+ \center
+    \begin{tabular}{l|l|l}%
+    \bfseries  time & \bfseries accuracy & \bfseries finalK % specify table head
+    \csvreader[head to column names]{knn_wo_norm/stats.csv}{}% use head of csv as column names
+    {\\\hline \csvcoli&\csvcolii&\csvcoliii}% specify your coloumns here
+    \end{tabular}
+    \caption{\footnotesize{Alcune statistiche della sperimentazione. Il tempo totale per effettuare la nested cross-validation, espresso in secondi, l'accuratezza finale +- deviazione standard e il k finale selezionato.}}
+    \label{cross:stats1}
+\end{table}
+ 
+\section{Lavori futuri}
+\begin{itemize}
+\item Verifica delle performance a seguito dello shuffling dei dati.
+\item Verifica delle performance su diversi sub-set di feature.
+
+\end{itemize}
 
 %----------------------------------------------------------------------------------------
 %	REFERENCE LIST

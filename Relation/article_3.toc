@@ -1,11 +1,15 @@
+\select@language {italian}
+\select@language {italian}
 \contentsline {section}{Introduction}{1}{Doc-Start}
 \contentsline {subsection}{\numberline {0.1}Il dataset}{1}{subsection.0.1}
-\contentsline {subsection}{\numberline {0.2}Ottimizzazione delle performance}{1}{subsection.0.2}
+\contentsline {subsection}{\numberline {0.2}Ottimizzazione delle performance}{2}{subsection.0.2}
 \contentsline {section}{\numberline {1}Metodi e valutazione dei modelli}{2}{section.1}
 \contentsline {subsection}{\numberline {1.1}K-NN}{2}{subsection.1.1}
 \contentsline {subsection}{\numberline {1.2}K-NN online}{2}{subsection.1.2}
 \contentsline {subsection}{\numberline {1.3}Nested Cross-Validation}{2}{subsection.1.3}
 \contentsline {subsection}{\numberline {1.4}Rischio sequenziale}{2}{subsection.1.4}
 \contentsline {section}{\numberline {2}Sperimentazione}{2}{section.2}
-\contentsline {section}{References}{2}{section.2}
+\contentsline {subsection}{\numberline {2.1}K-NN senza normalizzazione}{2}{subsection.2.1}
+\contentsline {section}{\numberline {3}Lavori futuri}{3}{section.3}
+\contentsline {section}{Riferimenti bibliografici}{3}{section.3}
 \contentsfinish 

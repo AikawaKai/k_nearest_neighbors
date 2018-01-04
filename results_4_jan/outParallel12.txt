@@ -1,0 +1,15 @@
+[1] "Precision class1: "
+[1] 0.8664547
+[1] "Std Precision class1: "
+[1] 0.003270697
+[1] "Precision class2: "
+[1] 0.700147
+[1] "Std Precision class2: "
+[1] 0.008424343
+
+[1] "Std accuracy: "
+[1] 0.001873038
+     user    system   elapsed 
+   11.352     2.104 79695.457 
+[1] "Expected accuracy with k selection: "
+[1] 0.8329128
