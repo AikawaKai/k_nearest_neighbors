@@ -1,0 +1,27 @@
+[1] "Precision class1: "
+[1] 0.7938531
+[1] "Std Precision class1: "
+[1] 0.006774878
+[1] "Precision class2: "
+[1] 0.3592402
+[1] "Std Precision class2: "
+[1] 0.006104933
+
+[1] "Std accuracy: "
+[1] 0.004318288
+     user    system   elapsed 
+    7.732     1.420 78983.172 
+[1] "Expected accuracy with k selection (seq): "
+[1] 0.6754454
+     user    system   elapsed 
+   99.280    19.884 24564.903 
+[1] "Best final k selected: "
+[1] 19
+[1] "final S size: "
+[1] 14942
+[1] "S/DATASET = "
+[1] 0.3304144
+null device 
+          1 
+null device 
+          1 

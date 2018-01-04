@@ -1,6 +1,6 @@
 source("/home/kai/Documents/Unimi/MetodiStatisticiApp/k_nearest_neighbors/knn_library.r")
 
-file <- paste(path,"/parsed2.csv",sep="")
+file <- paste(path,"/parsed_normalized.csv",sep="")
 csv_readed <- read.csv(file=file)
 csv_readed <- csv_readed[1:2000,]
 #set.seed(100)

@@ -57,7 +57,7 @@
 \Authors{\center \textbf{Studente:} Marco Odore - \textbf{Matricola:} 868906}
  % Authors
 
-\Keywords{Keyword1 --- Keyword2 --- Keyword3} % Keywords - if you don't want any simply remove all the text between the curly brackets
+\Keywords{Apprendimento Supervisionato --- K-NN --- Classificazione binaria} % Keywords - if you don't want any simply remove all the text between the curly brackets
 \newcommand{\keywordname}{Keywords} % Defines the keywords heading name
 
 %----------------------------------------------------------------------------------------
@@ -86,7 +86,7 @@
 
 \addcontentsline{toc}{section}{Introduction} % Adds this section to the table of contents
 
-Si è scelto di implementare in R l'algoritmo K-NN e di applicarlo ad un problema di classificazione binario, dove si vuole associare ad una persona il suo possibile reddito annuale (discretizzato tramite una soglia, a due valori possibili), date alcune sue informazioni di base. 
+Si è scelto di implementare in R l'algoritmo di apprendimento supervisionato K-NN e di applicarlo ad un problema di classificazione binario, dove si vuole associare ad una persona il suo possibile reddito annuale (discretizzato, tramite una soglia, a due valori possibili), date alcune sue informazioni di base. 
 
 \subsection{Il dataset}
 Il dataset utilizzato \cite{Lichman:2013} contiene 48842 istanze, ognuna delle quali è caratterizzata da 14 feature:
@@ -108,13 +108,15 @@ Il dataset utilizzato \cite{Lichman:2013} contiene 48842 istanze, ognuna delle q
 \item \textbf{Hours-per-week} - Tipo continuo
 \item \textbf{Native-country} - Tipo nominale (41 valori possibili)}
 \end{itemize}
-Per rendere l'input gestibile da K-NN, si sono trasformate le feature di tipo nominale in una serie di feature binarie, e cioè utilizzando delle variabili dummy per ogni possibile valore che la feature può assumere.
+Per rendere l'input gestibile da K-NN, si sono trasformate le feature di tipo nominale in una serie di feature binarie, e cioè utilizzando delle variabili dummy per ogni possibile valore che la feature può assumere\footnote{\footnotesize{Con l'introduzione delle variabili dummy si è passati a 88 feature complessive.}}.
 \newline
 Per quanto riguarda l'etichettatura, ognuna delle istanze può assumere due possibili valori, e cioè
 \begin{itemize}
-\item $>=50k$
-\item $<50k$
+\item \textbf{classe 1}: $>50k$ 
+\item \textbf{classe 2}: $\le50k$
 \end{itemize} 
+
+Il dataset risulta essere sbilanciato, in quanto la classe 1 rappresenta il $23.93\% $ del dataset (la classe 2 il $76.07\% $). Inoltre al suo interno vi sono alcune istanze che per alcune feature non possiede specificazioni. Per questa motivazione si è deciso di escluderle dal processo di valutazione ed apprendimento, riducendo così la cardinalità complessiva del dataset a 45222 istanze\footnote{\footnotesize{Senza le istanze con valori sconosciuti le percentuali delle classi 1 e 2 si attestano rispettivamente su $24.78\%$ e $75.22\%$.}}. 
 
 \subsection{Ottimizzazione delle performance}
 Data la lentezza dell'algoritmo K-NN, soprattutto con grandi dataset, si è deciso di implementare la funzione di ricerca per i k più vicini in C++, che rispetto ad R risulta molto più veloce. Per quanto riguarda il task di \emph{cross-validation} invece, si è deciso di parallelizzarlo grazie ad una funzione fornita da una libreria di R\footnote{\emph{parLapply}, nella libreria di R \emph{parallel}.}, che ha permesso di suddividere agevolmente il problema.
@@ -123,16 +125,52 @@ Data la lentezza dell'algoritmo K-NN, soprattutto con grandi dataset, si è deci
 
 %------------------------------------------------
 
-\section{Metodi}
+\section{Metodi e valutazione dei modelli}
 
 Per il problema trattato si sono utilizzate due versioni di K-NN, e cioè quella classica e quella online.
 
 \subsection{K-NN}
-TO DO K-NN
+Questo algoritmo permette di generare un classificatore $h_{k-NN}$ memorizzando l'intero training set fornito in input e calibrando un suo parametro $k$, il quale permette di gestire l'underfitting e l'overfitting sul problema.
+\newline
+\newline
+L'assegnazione dell'etichetta ad un'istanza $x$ avviene nella seguente maniera:
+\newline
+\newline
+\textbf{$h_{k-NN}(x)=$}la maggioranza delle etichette $y_t$ delle $k$ istanze $x_t$ più vicine a $x$
 
 \subsection{K-NN online}
-TO DO K-NN ONLINE
+Si tratta di una variante di K-NN che in fase di training opera nella seguente maniera:
+\begin{itemize}
+\item Prova a classificare l'istanza $x_t$ usando K-NN sull'insieme $S$.
+\item Se $h_{K-NN}(x_t)\neq y_t$ aggiungi $x_t$ all'insieme $S$.
+\end{itemize}
 
+
+L'algoritmo inizia da un insieme $S$ vuoto, aggiungendovi man mano esempi quando sbaglia, lasciandolo inalterato invece quando non commette errori.
+
+\subsection{Nested Cross-Validation}
+Per la stima delle performance dei classificatori generati dalla versione base di K-NN e quella online si è deciso di utilizzare la \emph{cross-validation esterna} a 5 fold, sfruttando come metrica il \emph{test error}, calcolato come segue:
+
+\[\widetilde{er}(h_{k-NN})=\frac{1}{n}\sum_{i=1}^{n} l(y_t,h_{k-NN}(x_t))\]
+
+Dove $l$ è la funzione di perdita \emph{zero-uno}, che vale 1 nel caso in cui il predittore commette un errore.
+\newline
+
+Per selezionare invece il $k$ ottimale automaticamente, si è effettuata una cross-validation interna, sempre a 5 fold, sia nella fase di selezione finale (dove viene scelto il $k$ finale del modello), sia per la selezione del $k$ ottimale di ogni singolo fold generato dalla cross validazione esterna. Nella figura \ref{cross} sono mostrati i passi della \emph{nested cross-validation} (cross validazione interna + cross validazione esterna)
+\begin{figure}
+\includegraphics[scale=0.33]{cross.png}
+\caption{\footnotesize{Il modo in cui è avvenuto lo split del dataset sia per la cross validazione esterna (split più esterno) sia per la cross validazione interna (split interno sui singoli training set di ogni rispettivo fold)}}
+\label{cross}
+\end{figure}
+
+\subsection{Rischio sequenziale}
+Nel caso specifico di K-NN online si è deciso inoltre di valutare l'andamento del rischio sequenziale sull'intero dataset, calcolato come segue:
+
+\[
+er_{seq}(t)=\frac{1}{t}\sum_{i=1}^{t} l(y_t,h_{k-NN}(x_t))
+\]
+
+ad ogni passo t, e cioè alla t-esima istanza fornita in pasto all'algoritmo.
 \section{Results and Discussion}
 
 \lipsum[10] % Dummy text
