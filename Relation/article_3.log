@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.12.22)  4 JAN 2018 22:10
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.12.22)  4 JAN 2018 22:15
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -952,20 +952,12 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 77.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 77.
- (./article_3.toc
-LaTeX Font Info:    Try loading font information for OMS+phv on input line 12.
-(/usr/share/texlive/texmf-dist/tex/latex/psnfss/omsphv.fd
-File: omsphv.fd 
-)
-LaTeX Font Info:    Font shape `OMS/phv/m/n' in size <8> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 12.
-)
+ (./article_3.toc)
 \tf@toc=\write4
 \openout4 = `article_3.toc'.
 
 LaTeX Font Info:    Try loading font information for OMS+ptm on input line 96.
-
-(/usr/share/texlive/texmf-dist/tex/latex/psnfss/omsptm.fd
+ (/usr/share/texlive/texmf-dist/tex/latex/psnfss/omsptm.fd
 File: omsptm.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <8> not available
@@ -1000,28 +992,15 @@ Underfull \hbox (badness 10000) in paragraph at lines 156--158
 
  []
 
-<cross.png, id=120, 733.74126pt x 533.995pt>
+<cross.png, id=83, 733.74126pt x 533.995pt>
 File: cross.png Graphic file (type png)
  <use cross.png>
 Package pdftex.def Info: cross.png used on input line 161.
 (pdftex.def)             Requested size: 242.13536pt x 176.21889pt.
-
-
-Package Fancyhdr Warning: \headheight is too small (11.0pt): 
- Make it at least 21.0pt.
- We now make it that large for the rest of the document.
- This may cause the page layout to be inconsistent, however.
-
-[2 <./cross.png>]
-
-Package Fancyhdr Warning: \headheight is too small (11.0pt): 
- Make it at least 21.0pt.
- We now make it that large for the rest of the document.
- This may cause the page layout to be inconsistent, however.
-
-[3] (./article_3.bbl
+ (./article_3.bbl
 LaTeX Font Info:    Try loading font information for OT1+pcr on input line 7.
- (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1pcr.fd
+
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
 Package microtype Info: Loading generic settings for font family
@@ -1047,26 +1026,24 @@ Package Fancyhdr Warning: \headheight is too small (11.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[4
-
-]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 244.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 244.
+[2 <./cross.png>]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 188.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 188.
  (./article_3.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 244.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 244.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 188.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 188.
 Package rerunfilecheck Info: File `article_3.out' has not changed.
-(rerunfilecheck)             Checksum: 496BBECDAECCBA9F7C01FFC4616CA25B;1002.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 244.
+(rerunfilecheck)             Checksum: A81ED8590A27179A26E3EE7C2C1C16CE;603.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 188.
  ) 
 Here is how much of TeX's memory you used:
- 11378 strings out of 494910
- 168048 string characters out of 6179835
- 398171 words of memory out of 5000000
- 14235 multiletter control sequences out of 15000+600000
- 67934 words of font info for 245 fonts, out of 8000000 for 9000
+ 11266 strings out of 494910
+ 166663 string characters out of 6179835
+ 397126 words of memory out of 5000000
+ 14201 multiletter control sequences out of 15000+600000
+ 64274 words of font info for 202 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 43i,12n,51p,791b,349s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 43i,12n,51p,791b,347s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
 e/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texm
 f-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist
@@ -1079,10 +1056,10 @@ are/texlive/texmf-dist/fonts/type1/urw/symbol/usyr.pfb></usr/share/texlive/texm
 f-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/ty
 pe1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/u
 tmri8a.pfb>
-Output written on article_3.pdf (4 pages, 146892 bytes).
+Output written on article_3.pdf (2 pages, 135819 bytes).
 PDF statistics:
- 195 PDF objects out of 1000 (max. 8388607)
- 157 compressed objects within 2 object streams
- 26 named destinations out of 1000 (max. 500000)
- 52870 words of extra memory for PDF output out of 61914 (max. 10000000)
+ 145 PDF objects out of 1000 (max. 8388607)
+ 115 compressed objects within 2 object streams
+ 16 named destinations out of 1000 (max. 500000)
+ 50774 words of extra memory for PDF output out of 51595 (max. 10000000)
 
