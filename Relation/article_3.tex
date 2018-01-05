@@ -281,7 +281,7 @@ Inoltre il test error medio risultato della cross-validazione esterna risulta es
 
 Nel complesso, la standardizzazione ha effettivamente apportato delle variazioni di performance, anche se non totalmente positivo, come si evince dall'aumento dei falsi positivi per la classe 2. 
 
-\subsection{K-NN Online senza normalizzazione}
+\subsection{K-NN online senza normalizzazione}
 
 Passando all'analisi dell'algoritmo online, si è comunque cercato di selezionare un $k^{*}$ ottimale, automaticamente, tramite cross-validazione interna sull'intero dataset, applicando per ogni test set K-NN base e usando l'insieme S generato da ogni singolo training set dello split.
 \newline
@@ -298,7 +298,7 @@ Per quanto riguarda l'analisi del rischio sequenziale, calcolato sull'intero dat
 
 \begin{figure}
 \includegraphics[scale=0.35]{knn_online_wo_norm/seq_risk_final.png}
-\caption{\footnotesize{Rischio sequenziale con k = 19. Il rischio decresce dopo pochissimi esempi verso valori tra lo 0.33 e 0.40}}
+\caption{\footnotesize{Rischio sequenziale con k = 19. Il rischio decresce dopo pochissimi esempi verso valori tra lo 0.33 e 0.40. Dataset non normalizzato.}}
 \label{cross:seqrisk}
 \end{figure}
 Come conseguenza, si può notare dalla figura \ref{cross:misclass} come a cardinalità dell'insieme S cresca linearmente con l'arrivo di nuovi esempi, arrivando a contenere un totale di 14942 istanze (il 33\% dell'intero dataset, che è anche il valore del test error finale).
@@ -308,6 +308,35 @@ Come conseguenza, si può notare dalla figura \ref{cross:misclass} come a cardin
 \caption{\footnotesize{Cardinalità dell'insieme S (ordinate) con l'arrivo dei nuovi esempi (ascisse). Dataset non normalizzato.}}
 \label{cross:misclass}
 \end{figure}
+
+\section{K-NN online con normalizzazione dei dati}
+Anche in questo caso si è provato a selezionare il $k^{*}$ ottimale tramite cross-validation interna sull'intero dataset. Ma a differenza del dataset non normalizzato, il test error medio al variare di k sembra essere più regolare come si evince dalla figura \ref{cross:final4}, anche se comunque presenta degli andamenti più bruschi rispetto al K-NN base. Il $k^{*}$ è risultato essere uguale  a 11.
+\newline
+
+\begin{figure}
+\includegraphics[scale=0.27]{knn_online_norm/final_seq.png}
+\caption{\footnotesize{Test error per K-NN online, al variare di $k$ per la cross validazione interna finale. Dataset normalizzato.}}
+\label{cross:final4}
+\end{figure}
+
+Per quanto riguarda il rischio sequenziale, anche se l'andamento è il medesimo rispetto al dataset non normalizzato (discesa molto brusca verso valori stabili, figura \ref{cross:seqrisk1}) si può notale un netto miglioramento a livello di performance. Il test error finale si attesta infatti su valori intorno allo 0.23-0.24. Valori che sono decisamente inferiori rispetto ai risultato precedentemente ottenuto con il dataset non normalizzato. 
+
+\begin{figure}
+\includegraphics[scale=0.35]{knn_online_norm/seq_risk_final.png}
+\caption{\footnotesize{Rischio sequenziale con k = 11. Il rischio decresce dopo pochissimi esempi verso valori tra lo 0.23 e 0.30. Dataset normalizzato.}}
+\label{cross:seqrisk1}
+\end{figure}
+
+Come conseguenza della stabilità del rischio sequenziale, la cardinalità dell'insieme S ha una crescita lineare anche in questo caso, come si evince dalla figura \ref{cross:misclass1}.
+\newline 
+
+\begin{figure}
+\includegraphics[scale=0.30]{knn_online_norm/misclassified_final.png}
+\caption{\footnotesize{Cardinalità dell'insieme S (ordinate) con l'arrivo dei nuovi esempi (ascisse). Dataset normalizzato.}}
+\label{cross:misclass1}
+\end{figure}
+
+In conclusione si può dire che la normalizzazione delle feature abbia portato ad ad una variazione in positivo delle performance del classificatore online (prendendo in considerazione il solo test error).  Per un'analisi più accurata e statisticamente significativa, sarà comunque necessario eseguire più shuffling del dataset e rieseguire i test effettuati.
 
 \section{Lavori futuri}
 \begin{itemize}
