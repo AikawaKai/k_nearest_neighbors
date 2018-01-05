@@ -10,6 +10,7 @@
 \contentsline {subsection}{\numberline {1.4}Rischio sequenziale}{2}{subsection.1.4}
 \contentsline {section}{\numberline {2}Sperimentazione}{2}{section.2}
 \contentsline {subsection}{\numberline {2.1}K-NN senza normalizzazione}{2}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}K-NN con normalizzazione dei dati}{3}{subsection.2.2}
 \contentsline {section}{\numberline {3}Lavori futuri}{3}{section.3}
 \contentsline {section}{Riferimenti bibliografici}{3}{section.3}
 \contentsfinish 

@@ -13,3 +13,7 @@
    11.352     2.104 79695.457 
 [1] "Expected accuracy with k selection: "
 [1] 0.8329128
+     user    system   elapsed 
+  129.924    24.028 18124.619 
+[1] "Best final k selected: "
+[1] 31

@@ -112,11 +112,11 @@ Per rendere l'input gestibile da K-NN, si sono trasformate le feature di tipo no
 \newline
 Per quanto riguarda l'etichettatura, ognuna delle istanze può assumere due possibili valori, e cioè
 \begin{itemize}
-\item \textbf{classe 1}: $>50k$ 
-\item \textbf{classe 2}: $\le50k$
+\item \textbf{classe 1}: $\le50k$
+\item \textbf{classe 2}: $>50k$ 
 \end{itemize} 
 
-Il dataset risulta essere sbilanciato, in quanto la classe 1 rappresenta il $23.93\% $ del dataset (la classe 2 il $76.07\% $). Inoltre al suo interno vi sono alcune istanze che per alcune feature non possiede specificazioni. Per questa motivazione si è deciso di escluderle dal processo di valutazione ed apprendimento, riducendo così la cardinalità complessiva del dataset a 45222 istanze\footnote{\footnotesize{Senza le istanze con valori sconosciuti le percentuali delle classi 1 e 2 si attestano rispettivamente su $24.78\%$ e $75.22\%$.}}. 
+Il dataset risulta essere sbilanciato, in quanto la classe 2 rappresenta il $23.93\% $ del dataset (la classe 1 il $76.07\% $). Inoltre al suo interno vi sono alcune istanze che per alcune feature non possiede specificazioni. Per questa motivazione si è deciso di escluderle dal processo di valutazione ed apprendimento, riducendo così la cardinalità complessiva del dataset a 45222 istanze\footnote{\footnotesize{Senza le istanze con valori sconosciuti le percentuali delle classi 1 e 2 si attestano rispettivamente su $75.22\%$ e $24.78\%$.}}. 
 
 \subsection{Ottimizzazione delle performance}
 Data la lentezza dell'algoritmo K-NN, soprattutto con grandi dataset, si è deciso di implementare la funzione di ricerca per i k più vicini in C++, che rispetto ad R risulta molto più veloce. Per quanto riguarda il task di \emph{cross-validation} invece, si è deciso di parallelizzarlo grazie ad una funzione fornita da una libreria di R\footnote{\emph{parLapply}, nella libreria di R \emph{parallel}.}, che ha permesso di suddividere agevolmente il problema.
@@ -175,7 +175,7 @@ ad ogni passo t, e cioè alla t-esima istanza fornita in pasto all'algoritmo.
 La sperimentazione è stata effettuata sia normalizzando i dati\footnote{\footnotesize{Ogni specificazione delle feature è stata trasformata in una specificazione di una normale standard, sottraendo ad ogni valore la media campionaria e dividendo per la deviazione standard campionaria}}, sia in assenza di normalizzazione, questo per verificare l'impatto che questa procedura ha sulle performance dei classificatori generati.
 \newline
 \newline
-La ricerca del parametro $k$ è invece avvenuta su di un set di 26 possibili valori\footnote{\footnotesize{K=\{1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49, 51\}}}.
+La ricerca del parametro $k$ è avvenuta su di un set di 26 possibili valori\footnote{\footnotesize{K=\{1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49, 51\}}}.
 
 \subsection{K-NN senza normalizzazione}
 Le curve del test error al variare di k, valutate tramite cross-validation interna per ogni fold, hanno un andamento molto simile, come si evince dalla figura \ref{cross:int1}.
@@ -232,7 +232,8 @@ Nelle tabelle \ref{cross:prec1} e \ref{cross:stats1} vi sono un po' di statistic
     \caption{\footnotesize{Alcune statistiche della sperimentazione. Il tempo totale per effettuare la nested cross-validation, espresso in secondi, l'accuratezza finale +- deviazione standard e il k finale selezionato.}}
     \label{cross:stats1}
 \end{table}
- 
+\subsection{K-NN con normalizzazione dei dati}
+TO- DO
 \section{Lavori futuri}
 \begin{itemize}
 \item Verifica delle performance a seguito dello shuffling dei dati.
