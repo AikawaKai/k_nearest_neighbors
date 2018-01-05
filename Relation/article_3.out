@@ -6,8 +6,9 @@
 \BOOKMARK [2][-]{subsection.1.2}{K-NN online}{section.1}% 6
 \BOOKMARK [2][-]{subsection.1.3}{Nested Cross-Validation}{section.1}% 7
 \BOOKMARK [2][-]{subsection.1.4}{Rischio sequenziale}{section.1}% 8
-\BOOKMARK [1][-]{section.2}{Sperimentazione}{}% 9
+\BOOKMARK [1][-]{section.2}{Sperimentazione e analisi}{}% 9
 \BOOKMARK [2][-]{subsection.2.1}{K-NN senza normalizzazione}{section.2}% 10
 \BOOKMARK [2][-]{subsection.2.2}{K-NN con normalizzazione dei dati}{section.2}% 11
-\BOOKMARK [1][-]{section.3}{Lavori futuri}{}% 12
-\BOOKMARK [1][-]{section.3}{Riferimenti bibliografici}{}% 13
+\BOOKMARK [2][-]{subsection.2.3}{K-NN Online senza normalizzazione}{section.2}% 12
+\BOOKMARK [1][-]{section.3}{Lavori futuri}{}% 13
+\BOOKMARK [1][-]{section.3}{Riferimenti bibliografici}{}% 14

@@ -153,7 +153,7 @@ Per la stima delle performance dei classificatori generati dalla versione base d
 
 \[\widetilde{er}(h_{k-NN})=\frac{1}{n}\sum_{i=1}^{n} l(y_t,h_{k-NN}(x_t))\]
 
-Dove $l$ è la funzione di perdita \emph{zero-uno}, che vale 1 nel caso in cui il predittore commette un errore.
+Dove $l$ è la funzione di perdita \emph{zero-uno}, che vale 1 nel caso in cui il predittore commette un errore, 0 altrimenti.
 \newline
 
 Per selezionare invece il $k$ ottimale automaticamente, si è effettuata una cross-validation interna, sempre a 5 fold, sia nella fase di selezione finale (dove viene scelto il $k$ finale del modello), sia per la selezione del $k$ ottimale di ogni singolo fold generato dalla cross validazione esterna. Nella figura \ref{cross} sono mostrati i passi della \emph{nested cross-validation} (cross validazione interna + cross validazione esterna)
@@ -171,7 +171,7 @@ er_{seq}(t)=\frac{1}{t}\sum_{i=1}^{t} l(y_t,h_{k-NN}(x_t))
 \]
 
 ad ogni passo t, e cioè alla t-esima istanza fornita in pasto all'algoritmo.
-\section{Sperimentazione}
+\section{Sperimentazione e analisi}
 La sperimentazione è stata effettuata sia normalizzando i dati\footnote{\footnotesize{Ogni specificazione delle feature è stata trasformata in una specificazione di una normale standard, sottraendo ad ogni valore la media campionaria e dividendo per la deviazione standard campionaria}}, sia in assenza di normalizzazione, questo per verificare l'impatto che questa procedura ha sulle performance dei classificatori generati.
 \newline
 \newline
@@ -199,7 +199,7 @@ Il test error ha infatti il classico comportamento che si può osservare in K-NN
     \csvreader[head to column names]{knn_wo_norm/k.csv}{}% use head of csv as column names
     {\\\hline \csvcoli&\csvcolii}% specify your coloumns here
     \end{tabular}
-    \caption{\footnotesize{I k ottimi generati per ogni fold}}
+    \caption{\footnotesize{I k ottimi generati per ogni fold.}}
     \label{cross:k1}
 \end{table}
 
@@ -219,7 +219,7 @@ Nelle tabelle \ref{cross:prec1} e \ref{cross:stats1} vi sono un po' di statistic
     \csvreader[head to column names]{knn_wo_norm/prec.csv}{}% use head of csv as column names
     {\\\hline \csvcoli&\csvcolii}% specify your coloumns here
     \end{tabular}
-    \caption{\footnotesize{La precision finale per le due classi}}
+    \caption{\footnotesize{La precision finale per le due classi.}}
  	\label{cross:prec1}
  \end{table}
  \begin{table}
@@ -233,11 +233,88 @@ Nelle tabelle \ref{cross:prec1} e \ref{cross:stats1} vi sono un po' di statistic
     \label{cross:stats1}
 \end{table}
 \subsection{K-NN con normalizzazione dei dati}
-TO- DO
+A seguito della normalizzazione dei dati, i $k^{*}$ ottimi generati per ogni fold, a seguito della cross validazione interna, risultano essere tutti inferiori ai $k^{*}$ ottimi generati dal dataset non normalizzato, come si evince dalla tabella \ref{cross:k2}. 
+\newline
+\begin{table}
+\center
+\begin{tabular}{l|l|l|l|l|l}%
+    \bfseries  fold & \bfseries k % specify table head
+    \csvreader[head to column names]{knn_norm/k.csv}{}% use head of csv as column names
+    {\\\hline \csvcoli&\csvcolii}% specify your coloumns here
+    \end{tabular}
+    \caption{\footnotesize{I k ottimi generati per ogni fold, dal dataset normalizzato.}}
+    \label{cross:k2}
+\end{table}
+
+Inoltre il test error medio risultato della cross-validazione esterna risulta essere inferiore (accuratezza dell'83\%). Vi è però un netto calo della precision per la classe 2, a differenza della classe 1, che invece sembra guadagnare molto dalla normalizzazione, come si può notare dalla tabella \ref{cross:prec2} (confronto con tabella \ref{cross:prec1}). 
+
+\begin{table}
+\center
+\begin{tabular}{l|l|l}%
+    \bfseries  class & \bfseries precision % specify table head
+    \csvreader[head to column names]{knn_norm/prec.csv}{}% use head of csv as column names
+    {\\\hline \csvcoli&\csvcolii}% specify your coloumns here
+    \end{tabular}
+    \caption{\footnotesize{La precision finale per le due classi, per il dataset normalizzato.}}
+ 	\label{cross:prec2}
+ \end{table}
+ 
+ Infine il $k^{*}$ ottimo selezionato con la cross-validazione interna finale applicata all'intero dataset è risultato essere 31. L'andamento del test error medio per la selezione del parametro ottimale, al variare di k, è mostrato nella figura \ref{cross:final2}. Nella tabella \ref{cross:stats2} vi sono delle statistiche relative a questa specifica sperimentazione.
+ \newline
+ 
+ \begin{figure}
+\includegraphics[scale=0.27]{knn_wo_norm/final.png}
+\caption{\footnotesize{Test error al variare di $k$ per la cross validazione interna finale, per il dataset normalizzato.}}
+\label{cross:final2}
+\end{figure}
+ \begin{table}
+ \center
+    \begin{tabular}{l|l|l}%
+    \bfseries  time & \bfseries accuracy & \bfseries finalK % specify table head
+    \csvreader[head to column names]{knn_norm/stats.csv}{}% use head of csv as column names
+    {\\\hline \csvcoli&\csvcolii&\csvcoliii}% specify your coloumns here
+    \end{tabular}
+    \caption{\footnotesize{Alcune statistiche della sperimentazione con normalizzazione del dataset. Il tempo totale per effettuare la nested cross-validation, espresso in secondi, l'accuratezza finale +- deviazione standard e il k finale selezionato.}}
+    \label{cross:stats2}
+\end{table}
+
+
+Nel complesso, la standardizzazione ha effettivamente apportato delle variazioni di performance, anche se non totalmente positivo, come si evince dall'aumento dei falsi positivi per la classe 2. 
+
+\subsection{K-NN Online senza normalizzazione}
+
+Passando all'analisi dell'algoritmo online, si è comunque cercato di selezionare un $k^{*}$ ottimale, automaticamente, tramite cross-validazione interna sull'intero dataset, applicando per ogni test set K-NN base e usando l'insieme S generato da ogni singolo training set dello split.
+\newline
+
+Come si può notare dalla figura \ref{cross:final3}, in questo caso l'andamento del test error al variare di k è molto più irregolare rispetto alla versione non online dell'algoritmo, e segue dei bruschi cambiamenti di direzione. Questo è giustificato dal fatto che in fase di learning l'insieme S generato da ogni training set della cross-validation interna può cambiare anche radicalmente come contenuto (a causa della variabile k), e quindi può portare a risultati nettamente differenti in fase di valutazione sul validation set. Il $k^{*}$ ottimo è risultato essere 19.
+
+\begin{figure}
+\includegraphics[scale=0.27]{knn_online_wo_norm/final_seq.png}
+\caption{\footnotesize{Test error per K-NN online, al variare di $k$ per la cross validazione interna finale. Dataset non normalizzato.}}
+\label{cross:final3}
+\end{figure}
+
+Per quanto riguarda l'analisi del rischio sequenziale, calcolato sull'intero dataset, utilizzando come k il $k^{*}$ ottimo selezionato precedentemente, questo descresce molto rapidamente, fino a stabilizzarsi verso un test error di 0.33 (accuratezza del 67\%), come si può notare dalla figura \ref{cross:seqrisk}.
+
+\begin{figure}
+\includegraphics[scale=0.35]{knn_online_wo_norm/seq_risk_final.png}
+\caption{\footnotesize{Rischio sequenziale con k = 19. Il rischio decresce dopo pochissimi esempi verso valori tra lo 0.33 e 0.40}}
+\label{cross:seqrisk}
+\end{figure}
+Come conseguenza, si può notare dalla figura \ref{cross:misclass} come a cardinalità dell'insieme S cresca linearmente con l'arrivo di nuovi esempi, arrivando a contenere un totale di 14942 istanze (il 33\% dell'intero dataset, che è anche il valore del test error finale).
+
+\begin{figure}
+\includegraphics[scale=0.30]{knn_online_wo_norm/misclassified_final.png}
+\caption{\footnotesize{Cardinalità dell'insieme S (ordinate) con l'arrivo dei nuovi esempi (ascisse). Dataset non normalizzato.}}
+\label{cross:misclass}
+\end{figure}
+
 \section{Lavori futuri}
 \begin{itemize}
+\item Introduzione di altre metriche per la valutazione, come la Recall, la F-measure e la AUC per la curva ROC.
 \item Verifica delle performance a seguito dello shuffling dei dati.
 \item Verifica delle performance su diversi sub-set di feature.
+\item Applicazione di diversi metodi di normalizzazione delle feature (ad esempio normalizzazione nel range [0,1], oppure normalizzazione al vettore unitario).
 
 \end{itemize}
 
