@@ -6,4 +6,28 @@ M.~Lichman.
 \newblock 2013.
 \newblock \url{https://archive.ics.uci.edu/ml/datasets/adult}
 
+\bibitem{cesa:risk}
+N. Cesa-Bianchi.
+\newblock Test error. Dispense del corso di Metodi statistici per l'apprendimento.
+\newblock 2017.
+\newblock \url{http://cesa-bianchi.di.unimi.it/MSA/Note/5-statRisk.pdf}
+
+\bibitem{cesa:seq}
+N. Cesa-Bianchi.
+\newblock Rischio sequenziale. Dispense del corso di Metodi statistici per l'apprendimento.
+\newblock 2017.
+\newblock \url{http://cesa-bianchi.di.unimi.it/MSA/Note/10-ogd.pdf}
+
+
+\bibitem{cesa:pca}
+N. Cesa-Bianchi.
+\newblock Riduzione della dimensionalità. Dispense del corso di Metodi statistici per l'apprendimento.
+\newblock 2017.
+\newblock \url{http://cesa-bianchi.di.unimi.it/MSA/Note/17-svd.pdf}
+
+
+
+
 \end{thebibliography}
+
+

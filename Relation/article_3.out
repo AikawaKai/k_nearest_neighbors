@@ -10,6 +10,7 @@
 \BOOKMARK [2][-]{subsection.2.1}{K-NN senza normalizzazione}{section.2}% 10
 \BOOKMARK [2][-]{subsection.2.2}{K-NN con normalizzazione dei dati}{section.2}% 11
 \BOOKMARK [2][-]{subsection.2.3}{K-NN online senza normalizzazione}{section.2}% 12
-\BOOKMARK [1][-]{section.3}{K-NN online con normalizzazione dei dati}{}% 13
-\BOOKMARK [1][-]{section.4}{Lavori futuri}{}% 14
-\BOOKMARK [1][-]{section.4}{Riferimenti bibliografici}{}% 15
+\BOOKMARK [2][-]{subsection.2.4}{K-NN online con normalizzazione dei dati}{section.2}% 13
+\BOOKMARK [2][-]{subsection.2.5}{Principal Component Analysis}{section.2}% 14
+\BOOKMARK [1][-]{section.3}{Lavori futuri}{}% 15
+\BOOKMARK [1][-]{section.3}{Riferimenti bibliografici}{}% 16

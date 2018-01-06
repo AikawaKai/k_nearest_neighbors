@@ -137,6 +137,12 @@ L'assegnazione dell'etichetta ad un'istanza $x$ avviene nella seguente maniera:
 \newline
 \newline
 \textbf{$h_{k-NN}(x)=$}la maggioranza delle etichette $y_t$ delle $k$ istanze $x_t$ più vicine a $x$
+\newline
+
+In tal senso, per stabilire quanto sono vicine due istanze, si è deciso di utilizzare come metrica la \emph{distanza euclidea}, calcolata come:
+\[
+dist(x, x') = \sqrt{\sum_{i=1}^{d}(x_i - x_{i}')^{2}}
+\]
 
 \subsection{K-NN online}
 Si tratta di una variante di K-NN che in fase di training opera nella seguente maniera:
@@ -149,11 +155,16 @@ Si tratta di una variante di K-NN che in fase di training opera nella seguente m
 L'algoritmo inizia da un insieme $S$ vuoto, aggiungendovi man mano esempi quando sbaglia, lasciandolo inalterato invece quando non commette errori.
 
 \subsection{Nested Cross-Validation}
-Per la stima delle performance dei classificatori generati dalla versione base di K-NN e quella online si è deciso di utilizzare la \emph{cross-validation esterna} a 5 fold, sfruttando come metrica il \emph{test error}, calcolato come segue:
+Per la stima delle performance dei classificatori generati dalla versione base di K-NN e quella online si è deciso di utilizzare la \emph{cross-validation esterna} a 5 fold, sfruttando come metrica il \emph{test error}\cite{cesa:risk}, calcolato come segue:
 
 \[\widetilde{er}(h_{k-NN})=\frac{1}{n}\sum_{i=1}^{n} l(y_t,h_{k-NN}(x_t))\]
 
-Dove $l$ è la funzione di perdita \emph{zero-uno}, che vale 1 nel caso in cui il predittore commette un errore, 0 altrimenti.
+Dove $l$ è la funzione di perdita \emph{zero-uno}, che vale 1 nel caso in cui il predittore commette un errore, 0 altrimenti. Calcolata come segue:
+
+\[
+l(y_t,h_{k-NN}(x_t)) = I\{y_t\neq h_{k-NN}(x_t)\}
+\]
+Dove $I$ è la funzione identità.
 \newline
 
 Per selezionare invece il $k$ ottimale automaticamente, si è effettuata una cross-validation interna, sempre a 5 fold, sia nella fase di selezione finale (dove viene scelto il $k$ finale del modello), sia per la selezione del $k$ ottimale di ogni singolo fold generato dalla cross validazione esterna. Nella figura \ref{cross} sono mostrati i passi della \emph{nested cross-validation} (cross validazione interna + cross validazione esterna)
@@ -164,7 +175,7 @@ Per selezionare invece il $k$ ottimale automaticamente, si è effettuata una cro
 \end{figure}
 
 \subsection{Rischio sequenziale}
-Nel caso specifico di K-NN online si è deciso inoltre di valutare l'andamento del rischio sequenziale sull'intero dataset, calcolato come segue:
+Nel caso specifico di K-NN online si è deciso inoltre di valutare l'andamento del rischio sequenziale\cite{cesa:seq} sull'intero dataset, calcolato come segue:
 
 \[
 er_{seq}(t)=\frac{1}{t}\sum_{i=1}^{t} l(y_t,h_{k-NN}(x_t))
@@ -172,7 +183,14 @@ er_{seq}(t)=\frac{1}{t}\sum_{i=1}^{t} l(y_t,h_{k-NN}(x_t))
 
 ad ogni passo t, e cioè alla t-esima istanza fornita in pasto all'algoritmo.
 \section{Sperimentazione e analisi}
-La sperimentazione è stata effettuata sia normalizzando i dati\footnote{\footnotesize{Ogni specificazione delle feature è stata trasformata in una specificazione di una normale standard, sottraendo ad ogni valore la media campionaria e dividendo per la deviazione standard campionaria}}, sia in assenza di normalizzazione, questo per verificare l'impatto che questa procedura ha sulle performance dei classificatori generati.
+La sperimentazione è stata effettuata sia normalizzando i dati, sia in assenza di normalizzazione, questo per verificare l'impatto che questa procedura ha sulle performance dei classificatori generati.
+\newline
+\newline
+Il tipo di normalizzazione effettuato è quello che trasforma le specificazioni delle feature in specificazioni di una normale standard. Ogni nuovo valore per ogni istanza $x$ è stato infatti ottenuto come segue:
+\[
+x_{i}' = \frac{x_i - \mu_i}{\sigma_i}
+\]
+Dove $\mu_i$ rappresenta la media campionaria su tutti i valori delle istanze della feature/dimensione $i$, mentre $\sigma_i$ è la relativa deviazione standard campionaria.
 \newline
 \newline
 La ricerca del parametro $k$ è avvenuta su di un set di 26 possibili valori\footnote{\footnotesize{K=\{1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49, 51\}}}.
@@ -309,7 +327,7 @@ Come conseguenza, si può notare dalla figura \ref{cross:misclass} come a cardin
 \label{cross:misclass}
 \end{figure}
 
-\section{K-NN online con normalizzazione dei dati}
+\subsection{K-NN online con normalizzazione dei dati}
 Anche in questo caso si è provato a selezionare il $k^{*}$ ottimale tramite cross-validation interna sull'intero dataset. Ma a differenza del dataset non normalizzato, il test error medio al variare di k sembra essere più regolare come si evince dalla figura \ref{cross:final4}, anche se comunque presenta degli andamenti più bruschi rispetto al K-NN base. Il $k^{*}$ è risultato essere uguale  a 11.
 \newline
 
@@ -338,12 +356,31 @@ Come conseguenza della stabilità del rischio sequenziale, la cardinalità dell'
 
 In conclusione si può dire che la normalizzazione delle feature abbia portato ad ad una variazione in positivo delle performance del classificatore online (prendendo in considerazione il solo test error).  Per un'analisi più accurata e statisticamente significativa, sarà comunque necessario eseguire più shuffling del dataset e rieseguire i test effettuati.
 
+\subsection{Principal Component Analysis}
+Al fine di studiare una possibile \emph{feature selection} dei dati disponibili, sia per migliorare le performance dei predittori, che per rendere il processo di valutazione e di learning più veloce, è stata eseguita una \emph{PCA}\cite{cesa:pca}\footnote{\footnotesize{Si parla più propriamente \emph{feature extraction} in questo caso.}} sull'intero dataset.
+\newline
+
+La Principal Component Analysis permette di generare un nuovo insieme di feature, che sono ottenute come combinazione lineare delle precedenti. Le nuove feature risultano poi ordinate per varianza, la quale può essere utilizzata come criterio di selezione delle stesse.
+\newline
+
+Il calcolo della PCA è stato effettuato tramite la funzione di R \emph{prcmp}, utilizzando il dataset normalizzato.
+\newline
+
+Andando ad analizzare le prime due componenti principali(le componenti che maggiormente massimizzano la varianza dei punti) è possibile notare come le due classi siano sovrapposte nello spazio. È evidente però che ci sia un'area in cui la classe 2 è preponderante, a differenza della classe 1 che risulta ben distribuita nello spazio (figura \ref{pca1}). Questo ci suggerisce che il problema possa essere linearmente separabile (sfruttando le altre componenti) e quindi che sia possibile sfruttare algoritmi di apprendimento come il Perceptron o come la Support Vector Machine (sia nella versione base o sfruttando i kernel).
+\begin{figure}
+\includegraphics[scale=0.30]{comp1_2.pdf}
+\caption{\footnotesize{Analisi delle prime due componenti. La classe 1 è rappresentata dai punti neri, mentre la classe 2 dai punti rossi.}}
+\label{pca1}
+\end{figure}
+
+
 \section{Lavori futuri}
 \begin{itemize}
 \item Introduzione di altre metriche per la valutazione, come la Recall, la F-measure e la AUC per la curva ROC.
 \item Verifica delle performance a seguito dello shuffling dei dati.
 \item Verifica delle performance su diversi sub-set di feature.
 \item Applicazione di diversi metodi di normalizzazione delle feature (ad esempio normalizzazione nel range [0,1], oppure normalizzazione al vettore unitario).
+\item Analisi del training error e del test error al variare di k.
 
 \end{itemize}
 

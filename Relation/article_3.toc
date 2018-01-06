@@ -9,10 +9,11 @@
 \contentsline {subsection}{\numberline {1.3}Nested Cross-Validation}{2}{subsection.1.3}
 \contentsline {subsection}{\numberline {1.4}Rischio sequenziale}{2}{subsection.1.4}
 \contentsline {section}{\numberline {2}Sperimentazione e analisi}{2}{section.2}
-\contentsline {subsection}{\numberline {2.1}K-NN senza normalizzazione}{2}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.1}K-NN senza normalizzazione}{3}{subsection.2.1}
 \contentsline {subsection}{\numberline {2.2}K-NN con normalizzazione dei dati}{3}{subsection.2.2}
 \contentsline {subsection}{\numberline {2.3}K-NN online senza normalizzazione}{4}{subsection.2.3}
-\contentsline {section}{\numberline {3}K-NN online con normalizzazione dei dati}{5}{section.3}
-\contentsline {section}{\numberline {4}Lavori futuri}{5}{section.4}
-\contentsline {section}{Riferimenti bibliografici}{5}{section.4}
+\contentsline {subsection}{\numberline {2.4}K-NN online con normalizzazione dei dati}{4}{subsection.2.4}
+\contentsline {subsection}{\numberline {2.5}Principal Component Analysis}{5}{subsection.2.5}
+\contentsline {section}{\numberline {3}Lavori futuri}{6}{section.3}
+\contentsline {section}{Riferimenti bibliografici}{6}{section.3}
 \contentsfinish 

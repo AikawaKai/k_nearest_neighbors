@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.1.4)  5 JAN 2018 21:40
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.1.4)  6 JAN 2018 01:02
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1017,91 +1017,32 @@ LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <10> not available
 
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 133--140
+Underfull \hbox (badness 10000) in paragraph at lines 133--141
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 133--140
+Underfull \hbox (badness 10000) in paragraph at lines 133--141
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 156--158
+Underfull \hbox (badness 10000) in paragraph at lines 133--141
 
  []
 
-<cross.png, id=113, 733.74126pt x 533.995pt>
+
+Underfull \hbox (badness 10000) in paragraph at lines 166--169
+
+ []
+
+<cross.png, id=120, 733.74126pt x 533.995pt>
 File: cross.png Graphic file (type png)
  <use cross.png>
-Package pdftex.def Info: cross.png used on input line 161.
+Package pdftex.def Info: cross.png used on input line 172.
 (pdftex.def)             Requested size: 242.13536pt x 176.21889pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 175--179
-
- []
-
-<knn_wo_norm/fold_1.png, id=118, 939.51pt x 469.755pt>
-File: knn_wo_norm/fold_1.png Graphic file (type png)
-
-<use knn_wo_norm/fold_1.png>
-Package pdftex.def Info: knn_wo_norm/fold_1.png used on input line 183.
-(pdftex.def)             Requested size: 253.67108pt x 126.83554pt.
-
-<knn_wo_norm/fold_2.png, id=119, 939.51pt x 469.755pt>
-File: knn_wo_norm/fold_2.png Graphic file (type png)
-
-<use knn_wo_norm/fold_2.png>
-Package pdftex.def Info: knn_wo_norm/fold_2.png used on input line 184.
-(pdftex.def)             Requested size: 253.67108pt x 126.83554pt.
-
-<knn_wo_norm/fold_3.png, id=120, 939.51pt x 469.755pt>
-File: knn_wo_norm/fold_3.png Graphic file (type png)
-
-<use knn_wo_norm/fold_3.png>
-Package pdftex.def Info: knn_wo_norm/fold_3.png used on input line 185.
-(pdftex.def)             Requested size: 253.67108pt x 126.83554pt.
-
-<knn_wo_norm/fold_4.png, id=121, 939.51pt x 469.755pt>
-File: knn_wo_norm/fold_4.png Graphic file (type png)
-
-<use knn_wo_norm/fold_4.png>
-Package pdftex.def Info: knn_wo_norm/fold_4.png used on input line 186.
-(pdftex.def)             Requested size: 253.67108pt x 126.83554pt.
-
-<knn_wo_norm/fold_5.png, id=122, 939.51pt x 469.755pt>
-File: knn_wo_norm/fold_5.png Graphic file (type png)
-
-<use knn_wo_norm/fold_5.png>
-Package pdftex.def Info: knn_wo_norm/fold_5.png used on input line 187.
-(pdftex.def)             Requested size: 253.67108pt x 126.83554pt.
-
-Overfull \hbox (11.25363pt too wide) in paragraph at lines 183--188
-[][]
- []
-
-
-Overfull \hbox (11.25363pt too wide) in paragraph at lines 183--188
-[]
- []
-
-
-Overfull \hbox (11.25363pt too wide) in paragraph at lines 183--188
-[]
- []
-
-
-Overfull \hbox (11.25363pt too wide) in paragraph at lines 183--188
-[]
- []
-
-
-Overfull \hbox (11.25363pt too wide) in paragraph at lines 183--188
-[] 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 181--205
+Underfull \hbox (badness 10000) in paragraph at lines 186--190
 
  []
 
@@ -1111,24 +1052,88 @@ Package Fancyhdr Warning: \headheight is too small (11.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[2 <./cross.png>] <knn_wo_norm/final.png, id=140, 939.51pt x 469.755pt>
+[2 <./cross.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 192--197
+
+ []
+
+<knn_wo_norm/fold_1.png, id=139, 939.51pt x 469.755pt>
+File: knn_wo_norm/fold_1.png Graphic file (type png)
+
+<use knn_wo_norm/fold_1.png>
+Package pdftex.def Info: knn_wo_norm/fold_1.png used on input line 201.
+(pdftex.def)             Requested size: 253.67108pt x 126.83554pt.
+
+<knn_wo_norm/fold_2.png, id=140, 939.51pt x 469.755pt>
+File: knn_wo_norm/fold_2.png Graphic file (type png)
+
+<use knn_wo_norm/fold_2.png>
+Package pdftex.def Info: knn_wo_norm/fold_2.png used on input line 202.
+(pdftex.def)             Requested size: 253.67108pt x 126.83554pt.
+
+<knn_wo_norm/fold_3.png, id=141, 939.51pt x 469.755pt>
+File: knn_wo_norm/fold_3.png Graphic file (type png)
+
+<use knn_wo_norm/fold_3.png>
+Package pdftex.def Info: knn_wo_norm/fold_3.png used on input line 203.
+(pdftex.def)             Requested size: 253.67108pt x 126.83554pt.
+
+<knn_wo_norm/fold_4.png, id=142, 939.51pt x 469.755pt>
+File: knn_wo_norm/fold_4.png Graphic file (type png)
+
+<use knn_wo_norm/fold_4.png>
+Package pdftex.def Info: knn_wo_norm/fold_4.png used on input line 204.
+(pdftex.def)             Requested size: 253.67108pt x 126.83554pt.
+
+<knn_wo_norm/fold_5.png, id=143, 939.51pt x 469.755pt>
+File: knn_wo_norm/fold_5.png Graphic file (type png)
+
+<use knn_wo_norm/fold_5.png>
+Package pdftex.def Info: knn_wo_norm/fold_5.png used on input line 205.
+(pdftex.def)             Requested size: 253.67108pt x 126.83554pt.
+
+Overfull \hbox (11.25363pt too wide) in paragraph at lines 201--206
+[][]
+ []
+
+
+Overfull \hbox (11.25363pt too wide) in paragraph at lines 201--206
+[]
+ []
+
+
+Overfull \hbox (11.25363pt too wide) in paragraph at lines 201--206
+[]
+ []
+
+
+Overfull \hbox (11.25363pt too wide) in paragraph at lines 201--206
+[]
+ []
+
+
+Overfull \hbox (11.25363pt too wide) in paragraph at lines 201--206
+[] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 199--223
+
+ []
+
+<knn_wo_norm/final.png, id=146, 939.51pt x 469.755pt>
 File: knn_wo_norm/final.png Graphic file (type png)
 
 <use knn_wo_norm/final.png>
-Package pdftex.def Info: knn_wo_norm/final.png used on input line 208.
+Package pdftex.def Info: knn_wo_norm/final.png used on input line 226.
 (pdftex.def)             Requested size: 253.67108pt x 126.83554pt.
 
-Overfull \hbox (11.25363pt too wide) in paragraph at lines 208--209
+Overfull \hbox (11.25363pt too wide) in paragraph at lines 226--227
 [][] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 206--235
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 262--264
+Underfull \hbox (badness 10000) in paragraph at lines 224--253
 
  []
 
@@ -1140,43 +1145,69 @@ Package Fancyhdr Warning: \headheight is too small (11.0pt):
 
 [3 <./knn_wo_norm/fold_1.png (PNG copy)> <./knn_wo_norm/fold_2.png (PNG copy)> 
 <./knn_wo_norm/fold_3.png (PNG copy)> <./knn_wo_norm/fold_4.png (PNG copy)> <./
-knn_wo_norm/fold_5.png (PNG copy)> <./knn_wo_norm/final.png (PNG copy)>]
-File: knn_wo_norm/final.png Graphic file (type png)
+knn_wo_norm/fold_5.png (PNG copy)>]
+Underfull \hbox (badness 10000) in paragraph at lines 280--282
 
+ []
+
+File: knn_wo_norm/final.png Graphic file (type png)
 <use knn_wo_norm/final.png>
-Package pdftex.def Info: knn_wo_norm/final.png used on input line 266.
+Package pdftex.def Info: knn_wo_norm/final.png used on input line 284.
 (pdftex.def)             Requested size: 253.67108pt x 126.83554pt.
 
-Overfull \hbox (11.25363pt too wide) in paragraph at lines 266--267
+Overfull \hbox (11.25363pt too wide) in paragraph at lines 284--285
 [][] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 286--288
+Underfull \hbox (badness 10000) in paragraph at lines 304--306
 
  []
 
-<knn_online_wo_norm/final_seq.png, id=160, 939.51pt x 469.755pt>
+<knn_online_wo_norm/final_seq.png, id=167, 939.51pt x 469.755pt>
 File: knn_online_wo_norm/final_seq.png Graphic file (type png)
 
 <use knn_online_wo_norm/final_seq.png>
-Package pdftex.def Info: knn_online_wo_norm/final_seq.png used on input line 29
-2.
+Package pdftex.def Info: knn_online_wo_norm/final_seq.png used on input line 31
+0.
 (pdftex.def)             Requested size: 253.67108pt x 126.83554pt.
 
-Overfull \hbox (11.25363pt too wide) in paragraph at lines 292--293
+Overfull \hbox (11.25363pt too wide) in paragraph at lines 310--311
 [][] 
  []
 
-<knn_online_wo_norm/seq_risk_final.png, id=162, 702.625pt x 501.875pt>
+<knn_online_wo_norm/seq_risk_final.png, id=169, 702.625pt x 501.875pt>
 File: knn_online_wo_norm/seq_risk_final.png Graphic file (type png)
 
 <use knn_online_wo_norm/seq_risk_final.png>
 Package pdftex.def Info: knn_online_wo_norm/seq_risk_final.png used on input li
-ne 300.
+ne 318.
 (pdftex.def)             Requested size: 245.92242pt x 175.65887pt.
 
-Overfull \hbox (3.50497pt too wide) in paragraph at lines 300--301
+Overfull \hbox (3.50497pt too wide) in paragraph at lines 318--319
+[][] 
+ []
+
+<knn_online_wo_norm/misclassified_final.png, id=171, 702.625pt x 501.875pt>
+File: knn_online_wo_norm/misclassified_final.png Graphic file (type png)
+
+<use knn_online_wo_norm/misclassified_final.png>
+Package pdftex.def Info: knn_online_wo_norm/misclassified_final.png used on inp
+ut line 325.
+(pdftex.def)             Requested size: 210.78912pt x 150.56366pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 331--333
+
+ []
+
+<knn_online_norm/final_seq.png, id=173, 939.51pt x 469.755pt>
+File: knn_online_norm/final_seq.png Graphic file (type png)
+
+<use knn_online_norm/final_seq.png>
+Package pdftex.def Info: knn_online_norm/final_seq.png used on input line 335.
+(pdftex.def)             Requested size: 253.67108pt x 126.83554pt.
+
+Overfull \hbox (11.25363pt too wide) in paragraph at lines 335--336
 [][] 
  []
 
@@ -1186,55 +1217,59 @@ Package Fancyhdr Warning: \headheight is too small (11.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[4 <./knn_online_wo_norm/final_seq.png (PNG copy)> <./knn_online_wo_norm/seq_ri
-sk_final.png>]
-<knn_online_wo_norm/misclassified_final.png, id=175, 702.625pt x 501.875pt>
-File: knn_online_wo_norm/misclassified_final.png Graphic file (type png)
-
-<use knn_online_wo_norm/misclassified_final.png>
-Package pdftex.def Info: knn_online_wo_norm/misclassified_final.png used on inp
-ut line 307.
-(pdftex.def)             Requested size: 210.78912pt x 150.56366pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 313--315
-
- []
-
-<knn_online_norm/final_seq.png, id=177, 939.51pt x 469.755pt>
-File: knn_online_norm/final_seq.png Graphic file (type png)
-
-<use knn_online_norm/final_seq.png>
-Package pdftex.def Info: knn_online_norm/final_seq.png used on input line 317.
-(pdftex.def)             Requested size: 253.67108pt x 126.83554pt.
-
-Overfull \hbox (11.25363pt too wide) in paragraph at lines 317--318
-[][] 
- []
-
-<knn_online_norm/seq_risk_final.png, id=179, 702.625pt x 501.875pt>
+[4 <./knn_wo_norm/final.png (PNG copy)>]
+<knn_online_norm/seq_risk_final.png, id=189, 702.625pt x 501.875pt>
 File: knn_online_norm/seq_risk_final.png Graphic file (type png)
 
 <use knn_online_norm/seq_risk_final.png>
 Package pdftex.def Info: knn_online_norm/seq_risk_final.png used on input line 
-325.
+343.
 (pdftex.def)             Requested size: 245.92242pt x 175.65887pt.
 
-Overfull \hbox (3.50497pt too wide) in paragraph at lines 325--326
+Overfull \hbox (3.50497pt too wide) in paragraph at lines 343--344
 [][] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 330--332
+Underfull \hbox (badness 10000) in paragraph at lines 348--350
 
  []
 
-<knn_online_norm/misclassified_final.png, id=181, 702.625pt x 501.875pt>
+<knn_online_norm/misclassified_final.png, id=191, 702.625pt x 501.875pt>
 File: knn_online_norm/misclassified_final.png Graphic file (type png)
 
 <use knn_online_norm/misclassified_final.png>
 Package pdftex.def Info: knn_online_norm/misclassified_final.png used on input 
-line 334.
+line 352.
 (pdftex.def)             Requested size: 210.78912pt x 150.56366pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 360--362
+
+ []
+
+
+Package Fancyhdr Warning: \headheight is too small (11.0pt): 
+ Make it at least 21.0pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[5 <./knn_online_wo_norm/final_seq.png (PNG copy)> <./knn_online_wo_norm/seq_ri
+sk_final.png> <./knn_online_wo_norm/misclassified_final.png> <./knn_online_norm
+/final_seq.png (PNG copy)> <./knn_online_norm/seq_risk_final.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 363--365
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 366--368
+
+ []
+
+<comp1_2.pdf, id=205, 614.295pt x 794.97pt>
+File: comp1_2.pdf Graphic file (type pdf)
+ <use comp1_2.pdf>
+Package pdftex.def Info: comp1_2.pdf used on input line 371.
+(pdftex.def)             Requested size: 184.28992pt x 238.49284pt.
  (./article_3.bbl
 LaTeX Font Info:    Try loading font information for OT1+pcr on input line 7.
 
@@ -1257,14 +1292,39 @@ ci . edu / ml /
  []
 
 
-Package Fancyhdr Warning: \headheight is too small (11.0pt): 
- Make it at least 17.0pt.
- We now make it that large for the rest of the document.
- This may cause the page layout to be inconsistent, however.
+Underfull \hbox (badness 2134) in paragraph at lines 10--14
+[]\OT1/ptm/m/n/10 (+20) N. Cesa-Bianchi.  Te-st er-ror. Di-spen-se del cor-so
+ []
 
-[5 <./knn_online_wo_norm/misclassified_final.png> <./knn_online_norm/final_seq.
-png (PNG copy)> <./knn_online_norm/seq_risk_final.png> <./knn_online_norm/miscl
-assified_final.png>]) 
+
+Underfull \hbox (badness 4726) in paragraph at lines 10--14
+\OT1/ptm/m/n/10 (+20) di Me-to-di sta-ti-sti-ci per l'ap-pren-di-men-to.  2017.
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 10--14
+[][]$\OT1/pcr/m/n/10 http : / / cesa-[]bianchi . di . unimi . it / MSA /
+ []
+
+
+Underfull \hbox (badness 3724) in paragraph at lines 16--20
+[]\OT1/ptm/m/n/10 (+20) N. Cesa-Bianchi.  Ri-schio se-quen-zia-le. Di-spen-se
+ []
+
+
+Underfull \hbox (badness 2426) in paragraph at lines 16--20
+\OT1/ptm/m/n/10 (+20) del cor-so di Me-to-di sta-ti-sti-ci per l'ap-pren-di-men
+-to.
+ []
+
+
+Underfull \hbox (badness 1024) in paragraph at lines 16--20
+\OT1/ptm/m/n/10 (+20) 2017.  [][]$\OT1/pcr/m/n/10 http : / / cesa-[]bianchi . d
+i . unimi . it /
+ []
+
+) 
 AED: lastpage setting LastPage
 
 Package Fancyhdr Warning: \headheight is too small (11.0pt): 
@@ -1272,25 +1332,24 @@ Package Fancyhdr Warning: \headheight is too small (11.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[6
+[6 <./knn_online_norm/misclassified_final.png> <./comp1_2.pdf>]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 398.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 398.
 
-]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 361.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 361.
- (./article_3.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 361.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 361.
+(./article_3.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 398.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 398.
 Package rerunfilecheck Info: File `article_3.out' has not changed.
-(rerunfilecheck)             Checksum: 0219B813493E243D062E0E44B8E441FA;995.
+(rerunfilecheck)             Checksum: 390F0E269ADDD302CF553856EBBB99A0;1087.
  ) 
 Here is how much of TeX's memory you used:
- 13071 strings out of 494901
- 202571 string characters out of 6179487
- 443929 words of memory out of 5000000
- 15875 multiletter control sequences out of 15000+600000
- 66720 words of font info for 243 fonts, out of 8000000 for 9000
+ 13092 strings out of 494901
+ 202826 string characters out of 6179487
+ 445172 words of memory out of 5000000
+ 15884 multiletter control sequences out of 15000+600000
+ 67040 words of font info for 247 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 43i,12n,51p,791b,497s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 43i,13n,51p,791b,386s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
 e/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texm
 f-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist
@@ -1300,13 +1359,13 @@ public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/cou
 rier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.
 pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/sh
 are/texlive/texmf-dist/fonts/type1/urw/symbol/usyr.pfb></usr/share/texlive/texm
-f-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/ty
-pe1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/u
-tmri8a.pfb>
-Output written on article_3.pdf (6 pages, 430668 bytes).
+f-dist/fonts/type1/urw/symbol/usyr.pfb></usr/share/texlive/texmf-dist/fonts/typ
+e1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/ut
+mr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on article_3.pdf (6 pages, 3142993 bytes).
 PDF statistics:
- 252 PDF objects out of 1000 (max. 8388607)
- 197 compressed objects within 2 object streams
- 42 named destinations out of 1000 (max. 500000)
- 50874 words of extra memory for PDF output out of 51595 (max. 10000000)
+ 284 PDF objects out of 1000 (max. 8388607)
+ 224 compressed objects within 3 object streams
+ 47 named destinations out of 1000 (max. 500000)
+ 50887 words of extra memory for PDF output out of 51595 (max. 10000000)
 
