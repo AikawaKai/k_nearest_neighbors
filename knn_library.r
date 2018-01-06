@@ -48,6 +48,7 @@ checkTpFpTnFn<-function(res, expected){
   }
 }
 
+# pca with feature selection
 doPcaAndSelection <- function(data, num_feat){
   classes <- data[,ncol(data)]
   data <- prcomp(data[,1:ncol(data)-1], center = TRUE, scale. = TRUE)
@@ -56,7 +57,7 @@ doPcaAndSelection <- function(data, num_feat){
   return(data)
 }
 
-# slow implementation
+# knn slow implementation
 myKnn <- function(training, test, k){
   myconfusionMatrix <- c(0, 0, 0, 0)
   training <- training
