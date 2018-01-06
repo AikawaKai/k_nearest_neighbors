@@ -1,5 +1,5 @@
 # Dataset
-- **adult.csv**: dataset originale.
+- **adult.csv**: dataset originale. https://archive.ics.uci.edu/ml/datasets/adult
 - **parsed2.csv**: si tratta del dataset privo di normalizzazione.
 - **parsed_normalized.csv**: il dataset con la standardizzazione.
 
