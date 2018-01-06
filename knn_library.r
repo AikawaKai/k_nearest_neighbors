@@ -6,7 +6,6 @@ path <- "/home/kai/Documents/Unimi/MetodiStatisticiApp/k_nearest_neighbors"
 
 # basic hold out
 myHoldOut<-function(csv_readed, perc){
-  ## 75% of the sample size
   smp_size <- floor(perc * nrow(csv_readed))
   train_ind <- sample(seq_len(nrow(csv_readed)), size = smp_size)
   training <- csv_readed[train_ind,]
