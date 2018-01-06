@@ -1,7 +1,7 @@
 # Dataset
-adult.csv: dataset originale.
-parsed2.csv: si tratta del dataset privo di normalizzazione.
-parsed_normalized.csv: il dataset con la standardizzazione.
+- adult.csv: dataset originale.
+- parsed2.csv: si tratta del dataset privo di normalizzazione.
+- parsed_normalized.csv: il dataset con la standardizzazione.
 
 # Contenuto
 - test_.r : nested cross-validation di K-NN base.
